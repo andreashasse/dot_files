@@ -1,0 +1,51 @@
+[alias]
+  xx = clean -dxf
+  st = status
+  ci = commit
+  di = diff
+  dw = diff --word-diff=color
+  co = checkout
+  l  = log --graph --pretty=format:'%C(red)%an %C(yellow)%ar %C(green)%s'
+  le  = log --graph --pretty=format:'%h, %an, %ar:%n%Cgreen %s %Creset'
+  a = log --ancestry-path
+  ll = log --pretty=format:'%C(blue)%h%C(red)%d %C(yellow)%an %C(green)%s' --decorate --stat=80,40
+  lla = log --pretty=format:"%Creset%s%Cblue\\ [%an]" --decorate
+  dw = diff --color-words
+  md = shortlog --no-merges origin/master..
+  create-pull-request = !sh -c 'stash pull-request $0 $@'
+
+[user]
+  email = andreas.hasselberg@gmail.com
+  name = Andreas Hasselberg
+
+[color]
+  branch = auto
+  diff = auto
+  interactive = auto
+  pager = true
+  status = auto
+  ui = auto
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  whitespace = red reverse
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[diff]
+  word-diff=color
+[push]
+  default = simple
+[filter "lfs"]
+  clean = git-lfs clean %f
+  smudge = git-lfs smudge %f
+  required = true
+[core]
+  editor = emacs
