@@ -4,10 +4,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
-;; '(edts-inhibit-package-check t)
-;; '(edts-man-root "/Users/andreas/.emacs.d/edts/doc/R7B")
  '(menu-bar-mode nil)
- '(safe-local-variable-values (quote ((allout-mode . t) (allout-layout . t))))
+ '(safe-local-variable-values
+   (quote
+    ((st-rulers .
+                [70])
+     (indent-tabs-mode . 1)
+     (allout-mode . t)
+     (allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
@@ -43,6 +47,7 @@
     exec-path-from-shell
     dash
     magit
+    ace-window
     edts))
 
 (dolist (p my-packages)
@@ -74,6 +79,7 @@
 (global-set-key "\C-t" 'other-window)
 (global-set-key "\M-g" 'goto-line)  ; Goto line number
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key "\M-/" 'hippie-expand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Annoying stuff
@@ -165,5 +171,18 @@
                                   ((reusable-frames . t)
                                   (inhibit-same-window . t)))))
 
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
 (exec-path-from-shell-initialize)
 (require 'better-defaults)
+
+;; org mode
+(setq org-default-notes-file "~/work/mydocs/notes.org")
+(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-cl" 'org-store-link)
+
+;; ace-windows
+(global-set-key (kbd "M-ö") 'ace-window)
