@@ -48,7 +48,9 @@
     dash
     magit
     ace-window
-    edts))
+    edts
+    git-gutter
+    helm-swoop))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -175,6 +177,8 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+(setq auto-save-default nil)
+(setq make-backup-files nil)
 
 (exec-path-from-shell-initialize)
 (require 'better-defaults)
@@ -186,3 +190,16 @@
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
+
+;; git gutter
+(global-git-gutter-mode +1)
+;; (global-set-key (kbd "C-x C-g") 'git-gutter)
+;; (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+;; (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+;; (global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+;; (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+;; (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
+
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+(global-set-key (kbd "C--") 'helm-swoop)
