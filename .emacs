@@ -50,7 +50,8 @@
     ace-window
     edts
     git-gutter
-    helm-swoop))
+    helm-swoop
+    expand-region))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -179,6 +180,7 @@
       `((".*" ,temporary-file-directory t)))
 (setq auto-save-default nil)
 (setq make-backup-files nil)
+(setq backup-inhibited t)
 
 (exec-path-from-shell-initialize)
 (require 'better-defaults)
@@ -200,6 +202,18 @@
 ;; (global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
 ;; (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 
-
+;; helm
+(global-set-key (kbd "M-x") 'helm-M-x)
+(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+(setq helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match    t)
+
 (global-set-key (kbd "C--") 'helm-swoop)
+(setq helm-swoop-use-fuzzy-match t)
+
+;; More good stuff
+;; helm-semantic-or-imenu
+;; helm-show-kill-ring
+;; helm-google-suggest
+;; er/expand-region
