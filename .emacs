@@ -1,9 +1,14 @@
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
     (expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+ '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
@@ -72,7 +77,11 @@
 (column-number-mode t)
 (line-number-mode t)
 
-(load "~/erlang-conf.el")
+(setq my-erl-root "~/build/otp")
+(setq erlang-root-dir (expand-file-name "lib/erlang" my-erl-root))
+(setq exec-path (cons (expand-file-name "bin" my-erl-root) exec-path))
+;; (require 'erlang-start)
+(require 'edts-start)
 
 (defun death (&optional none)
   (interactive "P")
@@ -83,12 +92,11 @@
 (global-set-key "\C-x\C-c" 'death)
 
 (custom-set-faces
- '(default ((t (:family "Ubuntu Mono"
-                        :foundry "unknown"
-                        :slant normal
-                        :weight normal
-                        :height 90
-                        :width normal)))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Ubuntu Mono" :foundry "unknown" :slant normal :weight normal :height 90 :width normal)))))
 
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :font "Andale Mono-12"))
@@ -115,8 +123,7 @@
 ;; magit
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;
-; org mode
+;; org mode
 (define-key global-map "\C-cc" 'org-capture)
 (define-key global-map "\C-cl" 'org-store-link)
 (setq org-capture-templates
@@ -139,7 +146,7 @@
       helm-recentf-fuzzy-match    t)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h f") 'helm-apropos)
-(global-set-key (kbd "C--") 'helm-swoop)
+(global-set-key (kbd "C-s") 'helm-swoop)
 (setq helm-swoop-use-fuzzy-match t)
 
 ;; disable backups
@@ -153,6 +160,5 @@
 
 ;; More good stuff
 ;; helm-semantic-or-imenu
-;; 
 ;; helm-google-suggest
 ;; er/expand-region
