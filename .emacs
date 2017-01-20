@@ -89,8 +89,7 @@
 
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :font "Andale Mono-12")
-  ;; fixme: linux font
-  (set-face-attribute 'default nil :font "Andale Mono-12"))
+  (set-face-attribute 'default nil :font "Ubuntu Mono-11"))
 
 (define-minor-mode sticky-buffer-mode
   "Make the current window always display this buffer."
