@@ -120,8 +120,8 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;; org mode
-(define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\C-cl" 'org-store-link)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c l") 'org-store-link)
 (setq org-capture-templates
       '(("t" "Todo" entry (file "~/Dropbox/mydocs/todo.org")
          "* TODO %? %t\n  %i\n  %a")
