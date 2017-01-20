@@ -1,6 +1,9 @@
 (custom-set-variables
  '(column-number-mode t)
  '(menu-bar-mode nil)
+ '(package-selected-packages
+   (quote
+    (expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
@@ -16,9 +19,9 @@
   (package-refresh-contents))
 
 (defvar my-packages
-  '(rainbow-delimiters
-    exec-path-from-shell
-    dash
+  '(exec-path-from-shell
+;;    rainbow-delimiters
+;;    dash
     magit
     ace-window
     edts
