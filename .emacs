@@ -85,6 +85,7 @@
 
 ;;; Themes
 (require 'labburn-theme)
+(set-face-attribute 'whitespace-space nil :background nil :foreground "gray40")
 
 
 (if (eq system-type 'darwin)
