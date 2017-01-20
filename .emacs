@@ -186,9 +186,13 @@
 (require 'better-defaults)
 
 ;; org mode
-(setq org-default-notes-file "~/work/mydocs/notes.org")
 (define-key global-map "\C-cc" 'org-capture)
 (define-key global-map "\C-cl" 'org-store-link)
+(setq org-capture-templates
+      '(("t" "Todo" entry (file "~/Dropbox/mydocs/todo.org")
+         "* TODO %? %t\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree "~/Dropbox/mydocs/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")))
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
