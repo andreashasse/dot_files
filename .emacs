@@ -77,10 +77,6 @@
 (column-number-mode t)
 (line-number-mode t)
 
-(setq my-erl-root "~/build/otp")
-(setq erlang-root-dir (expand-file-name "lib/erlang" my-erl-root))
-(setq exec-path (cons (expand-file-name "bin" my-erl-root) exec-path))
-;; (require 'erlang-start)
 (require 'edts-start)
 
 (defun death (&optional none)
@@ -148,6 +144,17 @@
 (global-set-key (kbd "C-h f") 'helm-apropos)
 (global-set-key (kbd "C-s") 'helm-swoop)
 (setq helm-swoop-use-fuzzy-match t)
+
+(global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
+(setq helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match    t)
+
+;; Language environment
+(set-terminal-coding-system 'iso-8859-1)
+(setq default-buffer-file-coding-system 'iso-8859-1)
+(prefer-coding-system 'iso-8859-1)
+(set-language-environment "Latin-1")
+(setq file-buffer-coding 'iso-8859-1)
 
 ;; disable backups
 (setq backup-directory-alist
