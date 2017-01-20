@@ -7,7 +7,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -25,8 +25,8 @@
 
 (defvar my-packages
   '(exec-path-from-shell
-;;    rainbow-delimiters
-;;    dash
+    rainbow-delimiters
+    labburn-theme
     magit
     ace-window
     edts
@@ -77,7 +77,8 @@
 (column-number-mode t)
 (line-number-mode t)
 
-(require 'edts-start)
+;;; Themes
+(require 'labburn-theme)
 
 (defun death (&optional none)
   (interactive "P")
@@ -87,15 +88,10 @@
 
 (global-set-key "\C-x\C-c" 'death)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ubuntu Mono" :foundry "unknown" :slant normal :weight normal :height 90 :width normal)))))
-
 (if (eq system-type 'darwin)
-    (set-face-attribute 'default nil :font "Andale Mono-12"))
+    (set-face-attribute 'default nil :font "Andale Mono-12")
+  ;; fixme: linux font
+  (set-face-attribute 'default nil :font "Andale Mono-12"))
 
 (define-minor-mode sticky-buffer-mode
   "Make the current window always display this buffer."
@@ -169,3 +165,10 @@
 ;; helm-semantic-or-imenu
 ;; helm-google-suggest
 ;; er/expand-region
+
+;;; Languages
+;; Erlang
+(require 'edts-start)
+
+;; Elisp
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
