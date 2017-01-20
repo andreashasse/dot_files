@@ -56,12 +56,10 @@
 ;; Set the shell emacs uses.
 (setq explicit-shell-file-name "/bin/bash")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global keybindings
 (global-set-key "\C-c\C-c" 'comment-region)
 (global-set-key "\M-/" 'hippie-expand)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Annoying stuff
 ;; (setq visible-bell t)
 (setq ring-bell-function 'ignore)
@@ -69,7 +67,15 @@
 ;; Scroll line by line
 (setq scroll-conservatively 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; y/n before kill emacs
+(defun death (&optional none)
+  (interactive "P")
+  (let ((foo (read-from-minibuffer "DEATH: y/n:")))
+    (if (equal foo "y")
+        (save-buffers-kill-emacs))))
+
+(global-set-key "\C-x\C-c" 'death)
+
 ;; Editing
 (setq-default mouse-yank-at-point t)
 (put 'overwrite-mode 'disabled t)
@@ -80,13 +86,6 @@
 ;;; Themes
 (require 'labburn-theme)
 
-(defun death (&optional none)
-  (interactive "P")
-  (let ((foo (read-from-minibuffer "DEATH: y/n:")))
-    (if (equal foo "y")
-        (save-buffers-kill-emacs))))
-
-(global-set-key "\C-x\C-c" 'death)
 
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :font "Andale Mono-12")
@@ -140,7 +139,6 @@
 (global-set-key (kbd "C-h f") 'helm-apropos)
 (global-set-key (kbd "C-s") 'helm-swoop)
 (setq helm-swoop-use-fuzzy-match t)
-
 (global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
@@ -161,8 +159,7 @@
 (setq make-backup-files nil)
 (setq backup-inhibited t)
 
-;; More good stuff
-;; helm-semantic-or-imenu
+;; Other good commands
 ;; helm-google-suggest
 ;; er/expand-region
 
