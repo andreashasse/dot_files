@@ -61,11 +61,9 @@
 (global-set-key "\M-/" 'hippie-expand)
 
 ;; Annoying stuff
-;; (setq visible-bell t)
 (setq ring-bell-function 'ignore)
-(scroll-bar-mode nil)
-;; Scroll line by line
-(setq scroll-conservatively 1)
+(toggle-scroll-bar -1)
+(setq scroll-conservatively 1) ;; Scroll line by line
 
 ;; y/n before kill emacs
 (defun death (&optional none)
@@ -85,9 +83,7 @@
 
 ;;; Themes
 (require 'labburn-theme)
-(set-face-attribute 'whitespace-space nil :background nil :foreground "gray40")
-
-
+(set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :font "Andale Mono-12")
   (set-face-attribute 'default nil :font "Ubuntu Mono-11"))
