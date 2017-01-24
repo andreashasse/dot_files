@@ -83,10 +83,14 @@
 
 ;;; Themes
 (require 'labburn-theme)
-(set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
+(set-face-attribute 'whitespace-space nil
+                    :background nil
+                    :foreground "gray30")
+(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
+
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :font "Andale Mono-12")
-  (set-face-attribute 'default nil :font "Ubuntu Mono-11"))
+  (set-face-attribute 'default nil :font "Ubuntu Mono-10"))
 
 (define-minor-mode sticky-buffer-mode
   "Make the current window always display this buffer."
@@ -116,6 +120,8 @@
 (setq org-capture-templates
       '(("t" "Todo" entry (file "~/Dropbox/mydocs/todo.org")
          "* TODO %? %t\n  %i\n  %a")
+        ("r" "Remember" entry (file "~/Dropbox/mydocs/remember.org")
+         "* %?")
         ("j" "Journal" entry (file+datetree "~/Dropbox/mydocs/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")))
 
