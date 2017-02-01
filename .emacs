@@ -64,6 +64,7 @@
 (setq ring-bell-function 'ignore)
 (toggle-scroll-bar -1)
 (setq scroll-conservatively 1) ;; Scroll line by line
+(setq create-lockfiles nil)
 
 ;; y/n before kill emacs
 (defun death (&optional none)
