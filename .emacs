@@ -7,7 +7,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -32,6 +32,7 @@
     edts
     git-gutter
     helm-swoop
+    helm-projectile
     expand-region))
 
 (dolist (p my-packages)
@@ -145,6 +146,7 @@
 (global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
+(global-set-key (kbd "C-x M-f") 'helm-projectile)
 
 ;; Language environment
 (set-terminal-coding-system 'iso-8859-1)
@@ -172,3 +174,9 @@
 
 ;; Elisp
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
