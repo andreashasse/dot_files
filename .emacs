@@ -7,7 +7,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -33,7 +33,8 @@
     git-gutter
     helm-swoop
     helm-projectile
-    expand-region))
+    expand-region
+    cider))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
