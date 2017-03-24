@@ -141,7 +141,7 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h f") 'helm-apropos)
 (global-set-key (kbd "C-s") 'helm-swoop)
-(setq helm-swoop-use-fuzzy-match t)
+;;(setq helm-swoop-use-fuzzy-match t)
 (global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
@@ -173,6 +173,8 @@
 
 ;; Elisp
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(projectile-mode)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
