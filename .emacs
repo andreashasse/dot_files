@@ -115,7 +115,7 @@
 (exec-path-from-shell-initialize)
 
 ;; magit
-(global-set-key (kbd "C-x g") 'magit-status)
+;; (global-set-key (kbd "C-x g") 'magit-status) use C-c p v
 
 ;; org mode
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -147,7 +147,7 @@
 (global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
-(global-set-key (kbd "C-x M-f") 'helm-projectile)
+;; (global-set-key (kbd "C-x M-f") 'helm-projectile) use C-c p h
 
 ;; Language environment
 (set-terminal-coding-system 'iso-8859-1)
