@@ -1,5 +1,5 @@
-export PATH=$PATH:~/Dropbox/bin:~/build/bin:~/build/otp/bin:
-export MANPATH=~/build/otp_doc_man_18.3/man:$MANPATH;
+export PATH=$PATH:~/Dropbox/bin:~/build/bin:~/build/otp/release/bin:
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
