@@ -1,0 +1,9 @@
+#!/bin/bash
+sudo apt install -y git emacs
+ssh-add
+if [ ! -d "dot_files" ]; then
+    git clone -v git@github.com:anha0825/dot_files.git
+fi
+ln -sf ~/dot_files/.emacs .
+ln -sf ~/dot_files/.bashrc .
+ln -sf ~/dot_files/.gitconfig .
