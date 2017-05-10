@@ -7,7 +7,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (which-key cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (dashboard which-key cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -187,3 +187,6 @@
 (projectile-mode)
 (which-key-mode)
 (which-key-setup-minibuffer)
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
