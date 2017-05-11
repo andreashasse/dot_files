@@ -5,9 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(menu-bar-mode nil)
+ '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (dashboard which-key cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -34,6 +35,7 @@
     helm-swoop
     helm-projectile
     expand-region
+    which-key
     cider))
 
 (dolist (p my-packages)
@@ -175,4 +177,17 @@
 
 ;; Elisp
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
 (projectile-mode)
+(which-key-mode)
+(which-key-setup-minibuffer)
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
