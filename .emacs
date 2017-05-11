@@ -36,6 +36,7 @@
     helm-projectile
     expand-region
     which-key
+    dashboard
     cider))
 
 (dolist (p my-packages)
