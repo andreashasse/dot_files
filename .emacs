@@ -8,7 +8,7 @@
  '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (which-key cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -124,11 +124,12 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 (setq org-capture-templates
       '(("t" "Todo" entry (file "~/Dropbox/mydocs/todo.org")
-         "* TODO %? %t\n  %i\n  %a")
+         "* TODO %?\n  %t\n  %i\n  %a")
         ("r" "Remember" entry (file "~/Dropbox/mydocs/remember.org")
          "* %?")
         ("j" "Journal" entry (file+datetree "~/Dropbox/mydocs/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")))
+(setq org-log-done t)
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
