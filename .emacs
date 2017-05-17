@@ -8,7 +8,7 @@
  '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (dashboard which-key cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (which-key cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -36,7 +36,6 @@
     helm-projectile
     expand-region
     which-key
-    dashboard
     cider))
 
 (dolist (p my-packages)
@@ -138,14 +137,19 @@
 (global-git-gutter-mode +1)
 
 ;; helm
+(setq helm-split-window-in-side-p t)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+;; use helm-locate to find files
+;; use helm-recentf to find recently opend files
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h f") 'helm-apropos)
-(global-set-key (kbd "C-s") 'helm-swoop)
+;;(global-set-key (kbd "C-s") 'helm-swoop)
+(define-key isearch-mode-map (kbd "C-s") 'helm-swoop-from-isearch)
+(setq helm-swoop-split-with-multiple-windows t)
 ;;(setq helm-swoop-use-fuzzy-match t)
 (global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
 (setq helm-semantic-fuzzy-match t
@@ -189,6 +193,3 @@
 (projectile-mode)
 (which-key-mode)
 (which-key-setup-minibuffer)
-
-(require 'dashboard)
-(dashboard-setup-startup-hook)
