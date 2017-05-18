@@ -36,6 +36,7 @@
     helm-projectile
     expand-region
     which-key
+    dashboard
     cider))
 
 (dolist (p my-packages)
@@ -194,3 +195,12 @@
 (projectile-mode)
 (which-key-mode)
 (which-key-setup-minibuffer)
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-mode)))
+(defun show-dashboard (&optional none)
+  (interactive "P")
+  ((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-refresh-buffer))))
+
+(global-set-key "\M-q" 'show-dashboard)
