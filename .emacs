@@ -8,8 +8,9 @@
  '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
+ '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
@@ -29,6 +30,8 @@
     rainbow-delimiters
     labburn-theme
     magit
+    deft
+    writegood-mode
     ace-window
     edts
     git-gutter
@@ -131,6 +134,12 @@
         ("j" "Journal" entry (file+datetree "~/Dropbox/mydocs/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")))
 (setq org-log-done t)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (flyspell-mode)))
+(add-hook 'org-mode-hook
+          (lambda ()
+            (writegood-mode)))
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
@@ -196,11 +205,19 @@
 (which-key-mode)
 (which-key-setup-minibuffer)
 
+;; Dashboard
 (require 'dashboard)
 (dashboard-setup-startup-hook)
 ((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-mode)))
 (defun show-dashboard (&optional none)
   (interactive "P")
   ((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-refresh-buffer))))
-
 (global-set-key "\M-q" 'show-dashboard)
+
+
+;; deft
+(setq deft-directory "~/dropbox/mydocs")
+(setq deft-use-filename-as-title t)
+(setq deft-extension "org")
+(setq deft-text-mode 'org-mode)
+(global-set-key (kbd "M-å") 'deft)
