@@ -8,7 +8,7 @@
  '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -37,6 +37,7 @@
     git-gutter
     helm-swoop
     helm-projectile
+    helm-ag
     expand-region
     which-key
     dashboard
@@ -140,6 +141,7 @@
 (add-hook 'org-mode-hook
           (lambda ()
             (writegood-mode)))
+(setq org-agenda-window-setup 'current-window)
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
@@ -212,8 +214,7 @@
 (defun show-dashboard (&optional none)
   (interactive "P")
   ((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-refresh-buffer))))
-(global-set-key "\M-q" 'show-dashboard)
-
+(global-set-key (kbd "C-å") 'show-dashboard)
 
 ;; deft
 (setq deft-directory "~/Dropbox/mydocs")
