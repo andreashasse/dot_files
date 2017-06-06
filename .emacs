@@ -225,6 +225,12 @@
 (setq deft-text-mode 'org-mode)
 (global-set-key (kbd "M-å") 'deft)
 
-
 (setq flyspell-issue-welcome-flag nil)
 (setq-default ispell-list-command "list")
+
+(defun setup-screen (num)
+  (interactive "nHow many windows? ")
+  (keyboard-escape-quit)
+  (dotimes (i (- num 1))
+    (split-window-right))
+  (balance-windows))
