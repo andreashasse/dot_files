@@ -41,7 +41,8 @@
     expand-region
     which-key
     dashboard
-    cider))
+    cider
+    ))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -219,6 +220,11 @@
 ;; deft
 (setq deft-directory "~/Dropbox/mydocs")
 (setq deft-use-filename-as-title t)
+(setq deft-extensions '("txt" "tex" "org" "clj" "erl"))
 (setq deft-extension "org")
 (setq deft-text-mode 'org-mode)
 (global-set-key (kbd "M-å") 'deft)
+
+
+(setq flyspell-issue-welcome-flag nil)
+(setq-default ispell-list-command "list")
