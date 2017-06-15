@@ -8,7 +8,7 @@
  '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -145,6 +145,12 @@
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
+
+(defun prev-window ()
+   (interactive)
+   (other-window -1))
+
+ (define-key global-map (kbd "C-x p") 'prev-window)
 
 ;; git gutter
 (global-git-gutter-mode +1)
