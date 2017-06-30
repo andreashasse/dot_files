@@ -42,6 +42,7 @@
     which-key
     dashboard
     cider
+    json-mode
     ))
 
 (dolist (p my-packages)
@@ -124,6 +125,7 @@
 
 ;; magit
 ;; (global-set-key (kbd "C-x g") 'magit-status) use C-c p v
+;; (add-hook 'after-save-hook 'magit-after-save-refresh-status)
 
 ;; org mode
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -240,3 +242,9 @@
   (dotimes (i (- num 1))
     (split-window-right))
   (balance-windows))
+
+
+;; I never code .js files and I'm too lazy to figure out how to properly override
+;; json-reformat:indent-width so simply set js-indent-level to 2
+;; json-mode uses js-indent-level to set the json indent and this works...
+(setq js-indent-level 2)
