@@ -8,7 +8,7 @@
  '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (helm-git-grep json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -38,6 +38,7 @@
     helm-swoop
     helm-projectile
     helm-ag
+    helm-git-grep
     expand-region
     which-key
     dashboard
