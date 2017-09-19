@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(menu-bar-mode nil)
- '(org-agenda-files (quote ("~/Dropbox/mydocs/todo.org")))
+ '(org-agenda-files (quote ("~/Dropbox/Andreas/mydocs/todo.org")))
  '(package-selected-packages
    (quote
     (json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
@@ -129,12 +129,15 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (setq org-capture-templates
-      '(("t" "Todo" entry (file "~/Dropbox/mydocs/todo.org")
-         "* TODO %?\n  %t\n  %i\n  %a")
-        ("r" "Remember" entry (file "~/Dropbox/mydocs/remember.org")
+      '(("t" "Todo" entry (file "~/Dropbox/Andreas/mydocs/todo.org")
+         "* TODO %?\n  SCHEDULED: %t\n  %i\n  %a")
+        ("r" "Remember" entry (file "~/Dropbox/Andreas/mydocs/remember.org")
          "* %?")
-        ("j" "Journal" entry (file+datetree "~/Dropbox/mydocs/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")))
+        ("j" "Journal" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ("m" "Meeting" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
+         "* %?<project and meeting name>\nNotes\n\nTasks\n\nOpen Questions\n\n")
+        ))
 (setq org-log-done t)
 (add-hook 'org-mode-hook
           (lambda ()
@@ -224,7 +227,7 @@
 (global-set-key (kbd "C-å") 'show-dashboard)
 
 ;; deft
-(setq deft-directory "~/Dropbox/mydocs")
+(setq deft-directory "~/Dropbox/Andreas/mydocs")
 (setq deft-use-filename-as-title t)
 (setq deft-extensions '("txt" "tex" "org" "clj" "erl"))
 (setq deft-extension "org")
