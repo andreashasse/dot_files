@@ -8,7 +8,7 @@
  '(org-agenda-files (quote ("~/Dropbox/Andreas/mydocs/todo.org")))
  '(package-selected-packages
    (quote
-    (json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (helm-git-grep json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -38,10 +38,12 @@
     helm-swoop
     helm-projectile
     helm-ag
+    helm-git-grep
     expand-region
     which-key
     dashboard
     cider
+    json-mode
     ))
 
 (dolist (p my-packages)
@@ -124,6 +126,7 @@
 
 ;; magit
 ;; (global-set-key (kbd "C-x g") 'magit-status) use C-c p v
+;; (add-hook 'after-save-hook 'magit-after-save-refresh-status)
 
 ;; org mode
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -246,3 +249,9 @@
   (dotimes (i (- num 1))
     (split-window-right))
   (balance-windows))
+
+
+;; I never code .js files and I'm too lazy to figure out how to properly override
+;; json-reformat:indent-width so simply set js-indent-level to 2
+;; json-mode uses js-indent-level to set the json indent and this works...
+(setq js-indent-level 2)
