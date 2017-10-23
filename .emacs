@@ -135,9 +135,12 @@
          "* %?")
         ("j" "Journal" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")
+        ("d" "Tech debt" entry (file "~/Dropbox/Andreas/mydocs/tech_debt.org")
+         "* %?")
         ("m" "Meeting" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
          "* %?<project and meeting name>\nNotes\n\nTasks\n\nOpen Questions\n\n")
         ))
+
 (setq org-log-done t)
 (add-hook 'org-mode-hook
           (lambda ()
