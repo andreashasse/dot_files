@@ -1,3 +1,5 @@
+eval "$(pyenv init -)"
+
 export PATH=$PATH:~/Dropbox/bin:~/build/bin:~/build/otp/release/bin:~/build/otp/bin
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
