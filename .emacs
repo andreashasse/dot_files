@@ -186,15 +186,25 @@
 ;;       helm-imenu-fuzzy-match    t)
 ;; ;; (global-set-key (kbd "C-x M-f") 'helm-projectile) use C-c p h
 
-(global-set-key (kbd "C-s") 'swiper)
+;;(global-set-key (kbd "C-s") 'swiper)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-
+(global-set-key (kbd "M-ä") 'counsel-semantic-or-imenu)
+(global-set-key (kbd "M-y") 'counsel-yank-pop)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
 (global-set-key (kbd "C-c k") 'counsel-ag)
+(define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;;(global-set-key (kbd "C-x l") 'counsel-locate)
 
+
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
+
+;; regex all words
+(setq ivy-re-builders-alist
+      '((t . ivy--regex-plus)))
+;;; C-c C-o (ivy-occur)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 
 ;; Language environment
