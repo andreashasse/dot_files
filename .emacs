@@ -169,8 +169,9 @@
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
 (define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
+;;(global-set-key (kbd "C-c k") 'counsel-ag)
+;;(global-set-key (kbd "C-c p") 'counsel-projectile)
 ;;(global-set-key (kbd "C-x l") 'counsel-locate)
 
 
