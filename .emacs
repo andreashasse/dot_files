@@ -8,7 +8,7 @@
  '(org-agenda-files nil)
  '(package-selected-packages
    (quote
-    (counsel swiper elpy helm-git-grep json-mode helm-ag writegood-mode deft which-key swiper-helm cider helm-projectile labburn-theme rainbow-delimiters expand-region helm-swoop git-gutter edts ace-window magit exec-path-from-shell)))
+    (counsel-projectile counsel swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -35,10 +35,6 @@
     ace-window
     edts
     git-gutter
-    helm-swoop
-    helm-projectile
-    helm-ag
-    helm-git-grep
     elpy
     expand-region
     which-key
@@ -166,26 +162,6 @@
 ;; git gutter
 (global-git-gutter-mode +1)
 
-;; helm
-;; (setq helm-split-window-in-side-p t)
-;; (global-set-key (kbd "M-x") 'helm-M-x)
-;; (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-;; (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-;; ;; use helm-locate to find files
-;; ;; use helm-recentf to find recently opend files
-;; (setq helm-buffers-fuzzy-matching t
-;;       helm-recentf-fuzzy-match    t)
-;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-;; (global-set-key (kbd "C-h f") 'helm-apropos)
-;; ;;(global-set-key (kbd "C-s") 'helm-swoop)
-;; (define-key isearch-mode-map (kbd "C-s") 'helm-swoop-from-isearch)
-;; (setq helm-swoop-split-with-multiple-windows t)
-;; ;;(setq helm-swoop-use-fuzzy-match t)
-;; (global-set-key (kbd "M-ä") 'helm-semantic-or-imenu)
-;; (setq helm-semantic-fuzzy-match t
-;;       helm-imenu-fuzzy-match    t)
-;; ;; (global-set-key (kbd "C-x M-f") 'helm-projectile) use C-c p h
-
 ;;(global-set-key (kbd "C-s") 'swiper)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -224,7 +200,6 @@
 (setq backup-inhibited t)
 
 ;; Other good commands
-;; helm-google-suggest
 ;; er/expand-region
 
 ;;; Languages
