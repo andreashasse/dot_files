@@ -123,7 +123,7 @@
 
 ;; magit
 ;; (global-set-key (kbd "C-x g") 'magit-status) use C-c p v
-;; (add-hook 'after-save-hook 'magit-after-save-refresh-status)
+(add-hook 'after-save-hook 'magit-after-save-refresh-status)
 
 ;; org mode
 (global-set-key (kbd "C-c c") 'org-capture)
