@@ -209,6 +209,7 @@
 
 ;; Python
 (elpy-enable)
+;; pyvenv-activate <dir of venv>
 
 ;; Elisp
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
