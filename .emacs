@@ -8,7 +8,7 @@
  '(org-agenda-files nil)
  '(package-selected-packages
    (quote
-    (counsel-projectile counsel swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
+    (projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -222,6 +222,7 @@
  )
 
 (projectile-mode)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 (which-key-mode)
 (which-key-setup-minibuffer)
 
