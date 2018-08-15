@@ -8,7 +8,7 @@
  '(org-agenda-files nil)
  '(package-selected-packages
    (quote
-    (projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
+    (flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -41,6 +41,10 @@
     dashboard
     cider
     json-mode
+    flx-ido
+    projectile
+    counsel-projectile
+    swiper
     ))
 
 (dolist (p my-packages)
@@ -123,7 +127,7 @@
 
 ;; magit
 ;; (global-set-key (kbd "C-x g") 'magit-status) use C-c p v
-(add-hook 'after-save-hook 'magit-after-save-refresh-status)
+;;(add-hook 'after-save-hook 'magit-after-save-refresh-status)
 
 ;; org mode
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -173,10 +177,14 @@
 ;;(global-set-key (kbd "C-c k") 'counsel-ag)
 ;;(global-set-key (kbd "C-c p") 'counsel-projectile)
 ;;(global-set-key (kbd "C-x l") 'counsel-locate)
+;; C-c g - find file in git repo
+;; C-c j - git grep
+;; C-c p e - recent file
 
 
 (setq ivy-use-virtual-buffers t)
 (setq ivy-count-format "(%d/%d) ")
+(setq ivy-initial-inputs-alist nil)
 
 ;; regex all words
 (setq ivy-re-builders-alist
@@ -252,6 +260,14 @@
   (dotimes (i (- num 1))
     (split-window-right))
   (balance-windows))
+
+(require 'flx-ido)
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
 
 
 ;; I never code .js files and I'm too lazy to figure out how to properly override
