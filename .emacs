@@ -8,7 +8,7 @@
  '(org-agenda-files nil)
  '(package-selected-packages
    (quote
-    (flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
+    (rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -45,6 +45,7 @@
     projectile
     counsel-projectile
     swiper
+    rjsx-mode
     ))
 
 (dolist (p my-packages)
@@ -269,8 +270,4 @@
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
 
-
-;; I never code .js files and I'm too lazy to figure out how to properly override
-;; json-reformat:indent-width so simply set js-indent-level to 2
-;; json-mode uses js-indent-level to set the json indent and this works...
-(setq js-indent-level 2)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
