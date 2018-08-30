@@ -157,6 +157,7 @@
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
+(setq aw-keys '(?j ?k ?l ?ö ?ä ?n ?m))
 
 (defun prev-window ()
    (interactive)
