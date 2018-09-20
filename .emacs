@@ -8,11 +8,14 @@
  '(org-agenda-files nil)
  '(package-selected-packages
    (quote
-    (rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
+    (multiple-cursors rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(whitespace-style
+   (quote
+    (face trailing tabs spaces newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
 
 ;;; Packages
 (require 'package)
@@ -64,6 +67,7 @@
 (setq user-mail-address "andreas.hasselberg@gmail.com")
 
 ;; Editing
+(setq whitespace-line-column 99)
 (global-whitespace-mode t)
 (setq-default indent-tabs-mode nil)
 
@@ -158,6 +162,7 @@
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
 (setq aw-keys '(?j ?k ?l ?ö ?ä ?n ?m))
+(setq aw-scope 'frame)
 
 (defun prev-window ()
    (interactive)
@@ -175,6 +180,14 @@
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c b") 'counsel-bookmark)
+(global-set-key (kbd "C-c d") 'bookmark-delete)
+(global-set-key (kbd "C-c m o") 'magit-checkout)
+(global-set-key (kbd "C-c m m") 'magit-file-popup)
+(global-set-key (kbd "C-c m d") 'magit-diff-popup)
+(global-set-key (kbd "C-c m c") 'magit-commit-popup)
+(global-set-key (kbd "C-c m p") 'magit-push-popup)
+(global-set-key (kbd "C-c m s") 'magit-diff-unstaged)
 (define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;;(global-set-key (kbd "C-c k") 'counsel-ag)
 ;;(global-set-key (kbd "C-c p") 'counsel-projectile)
@@ -219,10 +232,15 @@
 
 ;; Python
 (elpy-enable)
+(add-hook 'elpy-mood-hook
+          (lambda ()
+            (setq-local whitespace-line-column 99)))
+
 ;; pyvenv-activate <dir of venv>
 
 ;; Elisp
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(global-set-key (kbd "C-å") 'show-dashboard)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -233,6 +251,7 @@
 
 (projectile-mode)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
 (which-key-mode)
 (which-key-setup-minibuffer)
 
