@@ -4,11 +4,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
+ '(edts-inhibit-package-check t)
+ '(magit-diff-section-arguments (quote ("--no-ext-diff")))
  '(menu-bar-mode nil)
- '(org-agenda-files nil)
+ '(org-agenda-files (quote ("~/Desktop/epidemic_notes/todo.org")))
  '(package-selected-packages
    (quote
-    (multiple-cursors rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter edts ace-window magit exec-path-from-shell)))
+    (alchemist magithub use-package feature-mode iedit multiple-cursors rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -24,19 +26,27 @@
 
 (package-initialize)
 
+(require 'elixir-mode)
+(add-to-list 'elixir-mode-hook 'alchemist-mode)
+(add-to-list 'elixir-mode-hook 'company-mode)
+
 ; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
 
 (defvar my-packages
-  '(exec-path-from-shell
+  '(magithub
+    company
+    use-package
+    exec-path-from-shell
+    feature-mode
     rainbow-delimiters
     labburn-theme
     magit
     deft
     writegood-mode
     ace-window
-    edts
+;    edts
     git-gutter
     elpy
     expand-region
@@ -50,6 +60,13 @@
     swiper
     rjsx-mode
     ))
+
+
+(use-package magithub
+  :after magit
+  :config
+  (magithub-feature-autoinject t)
+  (setq magithub-clone-default-directory "~/work"))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
@@ -134,18 +151,16 @@
 ;; (global-set-key (kbd "C-x g") 'magit-status) use C-c p v
 ;;(add-hook 'after-save-hook 'magit-after-save-refresh-status)
 
+(setq magit-push-current-set-remote-if-missing t)
+
 ;; org mode
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (setq org-capture-templates
-      '(("t" "Todo" entry (file "~/Dropbox/Andreas/mydocs/todo.org")
-         "* TODO %?\n  SCHEDULED: %t\n  %i\n  %a")
-        ("r" "Remember" entry (file "~/Dropbox/Andreas/mydocs/remember.org")
-         "* %?")
-        ("j" "Journal" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")
-        ("d" "Tech debt" entry (file "~/Dropbox/Andreas/mydocs/tech_debt.org")
-         "* %?")
+      '(("t" "Todo" entry (file "~/Desktop/epidemic_notes/todo.org")
+         "* TODO %?")
+        ("j" "Journal" entry (file+datetree "~/Desktop/epidemic_notes/journal.org")
+         "* %k: %?")
         ("m" "Meeting" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
          "* %?<project and meeting name>\nNotes\n\nTasks\n\nOpen Questions\n\n")
         ))
@@ -172,6 +187,8 @@
 
 ;; git gutter
 (global-git-gutter-mode +1)
+
+(setq projectile-completion-system 'ivy)
 
 ;;(global-set-key (kbd "C-s") 'swiper)
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -228,6 +245,7 @@
 
 ;;; Languages
 ;; Erlang
+(add-to-list 'load-path "~/build/edts/")
 (require 'edts-start)
 
 ;; Python
@@ -236,10 +254,14 @@
           (lambda ()
             (setq-local whitespace-line-column 99)))
 
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
+
 ;; pyvenv-activate <dir of venv>
 
 ;; Elisp
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'after-init-hook 'global-company-mode)
 (global-set-key (kbd "C-å") 'show-dashboard)
 
 (custom-set-faces
@@ -262,10 +284,15 @@
 (defun show-dashboard (&optional none)
   (interactive "P")
   ((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-refresh-buffer))))
+(setq dashboard-items '((agenda . 5)
+                        (recents  . 5)
+                        (projects . 5)
+                        (bookmarks . 5)
+                        (registers . 5)))
 (global-set-key (kbd "C-å") 'show-dashboard)
 
 ;; deft
-(setq deft-directory "~/Dropbox/Andreas/mydocs")
+(setq deft-directory "~/Desktop/epidemic_notes/mydocs")
 (setq deft-use-filename-as-title t)
 (setq deft-extensions '("txt" "tex" "org" "clj" "erl"))
 (setq deft-extension "org")
