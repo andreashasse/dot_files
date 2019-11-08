@@ -49,3 +49,5 @@
   required = true
 [core]
   editor = emacs
+[github]
+	user = anha0825

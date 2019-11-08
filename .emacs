@@ -7,17 +7,17 @@
  '(edts-inhibit-package-check t)
  '(magit-diff-section-arguments (quote ("--no-ext-diff")))
  '(menu-bar-mode nil)
- '(org-agenda-files (quote ("~/Desktop/epidemic_notes/todo.org")))
+ '(org-agenda-files (quote ("~/work/notes.org")))
  '(package-selected-packages
    (quote
-    (alchemist magithub use-package feature-mode iedit multiple-cursors rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter ace-window magit exec-path-from-shell)))
+    (auto-complete auto-highlight-symbol f elixir-mode alchemist magithub use-package feature-mode iedit multiple-cursors rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter ace-window magit exec-path-from-shell)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(whitespace-style
    (quote
-    (face trailing tabs spaces newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
+    (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
 
 ;;; Packages
 (require 'package)
@@ -84,7 +84,7 @@
 (setq user-mail-address "andreas.hasselberg@gmail.com")
 
 ;; Editing
-(setq whitespace-line-column 99)
+(setq whitespace-line-column 80)
 (global-whitespace-mode t)
 (setq-default indent-tabs-mode nil)
 
@@ -121,11 +121,11 @@
 (require 'labburn-theme)
 (set-face-attribute 'whitespace-space nil
                     :background nil
-                    :foreground "gray30")
+                    :foreground "gray40")
 (set-face-attribute 'fringe nil :background "gray30" :foreground nil)
 
 (if (eq system-type 'darwin)
-    (set-face-attribute 'default nil :font "Andale Mono-12")
+    (set-face-attribute 'default nil :font "Monaco-12")
   (set-face-attribute 'default nil :font "Ubuntu Mono-10"))
 
 (define-minor-mode sticky-buffer-mode
@@ -190,7 +190,17 @@
 
 (setq projectile-completion-system 'ivy)
 
-;;(global-set-key (kbd "C-s") 'swiper)
+ (defun swiper--from-isearch ()
+      "Invoke `swiper' from isearch."
+      (interactive)
+      (let (($query (if isearch-regexp
+                        isearch-string
+                      (regexp-quote isearch-string))))
+        (isearch-exit)
+        (swiper $query)))
+
+;(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "M-ä") 'counsel-semantic-or-imenu)
@@ -205,7 +215,7 @@
 (global-set-key (kbd "C-c m c") 'magit-commit-popup)
 (global-set-key (kbd "C-c m p") 'magit-push-popup)
 (global-set-key (kbd "C-c m s") 'magit-diff-unstaged)
-(define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
+(define-key isearch-mode-map (kbd "C-s") 'swiper--from-isearch)
 ;;(global-set-key (kbd "C-c k") 'counsel-ag)
 ;;(global-set-key (kbd "C-c p") 'counsel-projectile)
 ;;(global-set-key (kbd "C-x l") 'counsel-locate)
