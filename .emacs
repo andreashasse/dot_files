@@ -4,73 +4,68 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
- '(edts-inhibit-package-check t)
  '(magit-diff-section-arguments (quote ("--no-ext-diff")))
  '(menu-bar-mode nil)
- '(org-agenda-files (quote ("~/Desktop/epidemic_notes/todo.org")))
+ '(org-agenda-files nil)
  '(package-selected-packages
    (quote
-    (alchemist magithub use-package feature-mode iedit multiple-cursors rjsx-mode flx-ido projectile counsel-projectile swiper elpy json-mode writegood-mode deft which-key swiper-helm cider labburn-theme rainbow-delimiters expand-region git-gutter ace-window magit exec-path-from-shell)))
+    (company-lsp lsp-ui lsp-mode erlang rjsx-mode counsel-projectile projectile flx-ido json-mode which-key elpy ace-window magit labburn-theme rainbow-delimiters exec-path-from-shell use-package company)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(whitespace-style
    (quote
-    (face trailing tabs spaces newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
+    (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
 
 ;;; Packages
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+;; (add-to-list 'package-archives
+;;              '("melpa" . "http://melpa.org/packages/") t)
+
+(setq package-archives
+      '(("GNU ELPA" . "http://elpa.gnu.org/packages/")
+        ("MELPA Stable" . "https://stable.melpa.org/packages/")
+        ("MELPA" . "https://melpa.org/packages/"))
+      package-archive-priorities
+      '(("MELPA Stable" . 10)
+        ("MELPA" . 5)
+        ("GNU ELPA" . 0)))
 
 (package-initialize)
-
-(require 'elixir-mode)
-(add-to-list 'elixir-mode-hook 'alchemist-mode)
-(add-to-list 'elixir-mode-hook 'company-mode)
 
 ; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
 
 (defvar my-packages
-  '(magithub
-    company
+  '(company
     use-package
     exec-path-from-shell
-    feature-mode
     rainbow-delimiters
     labburn-theme
     magit
-    deft
-    writegood-mode
     ace-window
-;    edts
-    git-gutter
     elpy
-    expand-region
     which-key
-    dashboard
-    cider
     json-mode
     flx-ido
     projectile
     counsel-projectile
     swiper
     rjsx-mode
+    ;; erlang
+    erlang
+    yasnippet
+    lsp-mode
+    lsp-ui
+    company-lsp
     ))
-
-
-(use-package magithub
-  :after magit
-  :config
-  (magithub-feature-autoinject t)
-  (setq magithub-clone-default-directory "~/work"))
 
 (dolist (p my-packages)
   (unless (package-installed-p p)
     (package-install p)))
+
 
 ;;; OSX
 ;;; I prefer cmd key for meta
@@ -84,16 +79,12 @@
 (setq user-mail-address "andreas.hasselberg@gmail.com")
 
 ;; Editing
-(setq whitespace-line-column 99)
+(setq whitespace-line-column 80)
 (global-whitespace-mode t)
 (setq-default indent-tabs-mode nil)
 
 ;; Set the shell emacs uses.
-(setq explicit-shell-file-name "/bin/bash")
-
-;; Global keybindings
-(global-set-key "\C-c\C-c" 'comment-region)
-(global-set-key "\M-/" 'hippie-expand)
+;(setq explicit-shell-file-name "/bin/bash")
 
 ;; Annoying stuff
 (setq ring-bell-function 'ignore)
@@ -121,29 +112,17 @@
 (require 'labburn-theme)
 (set-face-attribute 'whitespace-space nil
                     :background nil
-                    :foreground "gray30")
+                    :foreground "gray40")
 (set-face-attribute 'fringe nil :background "gray30" :foreground nil)
 
 (if (eq system-type 'darwin)
-    (set-face-attribute 'default nil :font "Andale Mono-12")
+    (set-face-attribute 'default nil :font "Monaco-12")
   (set-face-attribute 'default nil :font "Ubuntu Mono-10"))
 
 (define-minor-mode sticky-buffer-mode
   "Make the current window always display this buffer."
   nil " sticky" nil
   (set-window-dedicated-p (selected-window) sticky-buffer-mode))
-
-;; all buffers, try to reuse windows across all frames
-(add-to-list 'display-buffer-alist
-           '(".*". (display-buffer-reuse-window .
-                                  ((reusable-frames . t)))))
-
-;; except for compilation buffers where you want new and dedicated frames when necessary
-(add-to-list 'display-buffer-alist
-         '("^\\*Compile-Log\\*". ((display-buffer-reuse-window
-                                   display-buffer-pop-up-frame) .
-                                  ((reusable-frames . t)
-                                  (inhibit-same-window . t)))))
 
 (exec-path-from-shell-initialize)
 
@@ -152,6 +131,7 @@
 ;;(add-hook 'after-save-hook 'magit-after-save-refresh-status)
 
 (setq magit-push-current-set-remote-if-missing t)
+
 
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
@@ -164,35 +144,28 @@
    (interactive)
    (other-window -1))
 
- (define-key global-map (kbd "C-x p") 'prev-window)
-
-;; git gutter
-(global-git-gutter-mode +1)
+(define-key global-map (kbd "C-x p") 'prev-window)
 
 (setq projectile-completion-system 'ivy)
 
-;;(global-set-key (kbd "C-s") 'swiper)
+ (defun swiper--from-isearch ()
+      "Invoke `swiper' from isearch."
+      (interactive)
+      (let (($query (if isearch-regexp
+                        isearch-string
+                      (regexp-quote isearch-string))))
+        (isearch-exit)
+        (swiper $query)))
+
+;(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "M-ä") 'counsel-semantic-or-imenu)
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c b") 'counsel-bookmark)
-(global-set-key (kbd "C-c d") 'bookmark-delete)
-(global-set-key (kbd "C-c m o") 'magit-checkout)
-(global-set-key (kbd "C-c m m") 'magit-file-popup)
-(global-set-key (kbd "C-c m d") 'magit-diff-popup)
-(global-set-key (kbd "C-c m c") 'magit-commit-popup)
-(global-set-key (kbd "C-c m p") 'magit-push-popup)
-(global-set-key (kbd "C-c m s") 'magit-diff-unstaged)
-(define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
-;;(global-set-key (kbd "C-c k") 'counsel-ag)
-;;(global-set-key (kbd "C-c p") 'counsel-projectile)
-;;(global-set-key (kbd "C-x l") 'counsel-locate)
+(define-key isearch-mode-map (kbd "C-s") 'swiper--from-isearch)
 ;; C-c g - find file in git repo
-;; C-c j - git grep
-;; C-c p e - recent file
 
 
 (setq ivy-use-virtual-buffers t)
@@ -205,13 +178,6 @@
 ;;; C-c C-o (ivy-occur)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 
-;; Language environment
-(set-terminal-coding-system 'iso-8859-1)
-(setq default-buffer-file-coding-system 'iso-8859-1)
-(prefer-coding-system 'iso-8859-1)
-(set-language-environment "Latin-1")
-(setq file-buffer-coding 'iso-8859-1)
-
 ;; disable backups
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
@@ -222,12 +188,43 @@
 (setq backup-inhibited t)
 
 ;; Other good commands
-;; er/expand-region
 
 ;;; Languages
+
 ;; Erlang
-(add-to-list 'load-path "~/build/edts/")
-(require 'edts-start)
+;; Install the yasnippet dependency
+;(package-install 'erlang)
+;(package-install 'yasnippet)
+
+;; ----- lsp-mode -----
+;; Install the official lsp-mode package (minimum required version 6.2)
+;(package-install 'lsp-mode)
+;; Set path to erlang_ls escript (unless it's in your PATH)
+; (setq lsp-erlang-server-path "/Users/andreas/build/bin")
+;; Enable LSP automatically for Erlang files
+(add-hook 'erlang-mode-hook #'lsp)
+
+;; ----- lsp-ui -----
+;; It is usually a good idea to install lsp-ui as well
+;(package-install 'lsp-ui)
+(require 'lsp-ui)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+;; The lsp-ui sideline can become a serious distraction, so you
+;; may want to disable it
+(setq lsp-ui-sideline-enable nil)
+;; Ensure docs are visible
+(setq lsp-ui-doc-enable t)
+;(setq lsp-ui-doc-header t)
+;(setq lsp-ui-doc-use-childframe nil)
+(setq lsp-ui-doc-delay 0.2)
+
+;; ----- company-lsp -----
+;; Enables better integration with company (auto-completion)
+(add-hook 'after-init-hook 'global-company-mode)
+;(package-install 'company-lsp)
+(require 'company-lsp)
+(push 'company-lsp company-backends)
+(setq lsp-log-io t)
 
 ;; Python
 (elpy-enable)
@@ -240,17 +237,9 @@
 
 ;; pyvenv-activate <dir of venv>
 
-;; Elisp
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'after-init-hook 'global-company-mode)
-(global-set-key (kbd "C-å") 'show-dashboard)
+;; Javascript
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 (projectile-mode)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
@@ -258,31 +247,6 @@
 
 (which-key-mode)
 (which-key-setup-minibuffer)
-
-;; Dashboard
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-mode)))
-(defun show-dashboard (&optional none)
-  (interactive "P")
-  ((lambda nil (switch-to-buffer "*dashboard*") (goto-char (point-min)) (dashboard-refresh-buffer))))
-(setq dashboard-items '((agenda . 5)
-                        (recents  . 5)
-                        (projects . 5)
-                        (bookmarks . 5)
-                        (registers . 5)))
-(global-set-key (kbd "C-å") 'show-dashboard)
-
-;; deft
-(setq deft-directory "~/Desktop/epidemic_notes/mydocs")
-(setq deft-use-filename-as-title t)
-(setq deft-extensions '("txt" "tex" "org" "clj" "erl"))
-(setq deft-extension "org")
-(setq deft-text-mode 'org-mode)
-(global-set-key (kbd "M-å") 'deft)
-
-(setq flyspell-issue-welcome-flag nil)
-(setq-default ispell-list-command "list")
 
 (defun setup-screen (num)
   (interactive "nHow many windows? ")
@@ -298,5 +262,11 @@
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
+(setq ido-file-extensions-order '(".erl" ".hrl" ".org" ".txt" ".py" ".emacs"))
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
