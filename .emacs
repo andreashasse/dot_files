@@ -226,6 +226,14 @@
 (push 'company-lsp company-backends)
 (setq lsp-log-io t)
 
+(global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
+(global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
+; C-c d otp doc
+(global-set-key (kbd "C-c D") 'lsp-ui-doc-show)
+(global-set-key (kbd "C-c w") 'lsp-find-references)
+(global-set-key (kbd "C-c W") 'lsp-ui-peek-find-references)
+
+
 ;; Python
 (elpy-enable)
 (add-hook 'elpy-mood-hook
