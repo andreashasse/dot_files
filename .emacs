@@ -153,29 +153,10 @@
 
 (setq magit-push-current-set-remote-if-missing t)
 
-;; org mode
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c l") 'org-store-link)
-(setq org-capture-templates
-      '(("t" "Todo" entry (file "~/Desktop/epidemic_notes/todo.org")
-         "* TODO %?")
-        ("j" "Journal" entry (file+datetree "~/Desktop/epidemic_notes/journal.org")
-         "* %k: %?")
-        ("m" "Meeting" entry (file+datetree "~/Dropbox/Andreas/mydocs/journal.org")
-         "* %?<project and meeting name>\nNotes\n\nTasks\n\nOpen Questions\n\n")
-        ))
-
-(setq org-log-done t)
-(add-hook 'org-mode-hook
-          (lambda ()
-            (flyspell-mode)))
-(add-hook 'org-mode-hook
-          (lambda ()
-            (writegood-mode)))
-(setq org-agenda-window-setup 'current-window)
-
 ;; ace-windows
 (global-set-key (kbd "M-ö") 'ace-window)
+(global-set-key (kbd "C-x 0") 'ace-delete-window)
+
 (setq aw-keys '(?j ?k ?l ?ö ?ä ?n ?m))
 (setq aw-scope 'frame)
 
@@ -273,6 +254,7 @@
 
 (projectile-mode)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(setq projectile-enable-caching t)
 
 (which-key-mode)
 (which-key-setup-minibuffer)

@@ -12,7 +12,8 @@
   lla = log --pretty=format:"%Creset%s%Cblue\\ [%an]" --decorate
   dw = diff --color-words
   md = shortlog --no-merges origin/master..
-  create-pull-request = !sh -c 'stash pull-request $0 $@'
+  rba = !sh -c 'git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0)'
+  commend = commit --amend --no-edit
 
 [user]
   email = andreas.hasselberg@gmail.com
@@ -49,3 +50,7 @@
   required = true
 [core]
   editor = emacs
+[github]
+  user = anha0825
+[core]
+  hooksPath = /Users/andreas/build/bin
