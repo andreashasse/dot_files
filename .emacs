@@ -8,7 +8,8 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (which-key counsel-projectile lsp-origami lsp-ui company-lsp yasnippet lsp-mode erlang)))
+    (exec-path-from-shell projectile ace-window labburn-theme which-key counsel-projectile lsp-ui company-lsp yasnippet lsp-mode erlang)))
+ '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
@@ -16,32 +17,6 @@
    (quote
     (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
 
-(setq ring-bell-function 'ignore)
-
-;; disable backups
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-(setq auto-save-default nil)
-(setq make-backup-files nil)
-(setq backup-inhibited t)
-
-;; y/n before kill emacs
-(defun death (&optional none)
-  (interactive "P")
-  (let ((foo (read-from-minibuffer "DEATH: y/n:")))
-    (if (equal foo "y")
-        (save-buffers-kill-emacs))))
-
-;; Editing
-(setq-default mouse-yank-at-point t)
-(put 'overwrite-mode 'disabled t)
-(show-paren-mode t)
-(column-number-mode t)
-(line-number-mode t)
-
-(global-set-key "\C-x\C-c" 'death)
 
 ;; Use packages
 (require 'package)
@@ -64,6 +39,51 @@
       mac-command-key-is-meta t
       mac-command-modifier 'meta
       mac-option-modifier 'none)
+
+;; Name and E-mail
+(setq user-full-name "Andreas Hasselberg")
+(setq user-mail-address "andreas.hasselberg@gmail.com")
+
+(setq ring-bell-function 'ignore)
+
+;; y/n before kill emacs
+(defun death (&optional none)
+  (interactive "P")
+  (let ((foo (read-from-minibuffer "DEATH: y/n:")))
+    (if (equal foo "y")
+        (save-buffers-kill-emacs))))
+
+(global-set-key "\C-x\C-c" 'death)
+
+;; Editing
+(setq-default mouse-yank-at-point t)
+(put 'overwrite-mode 'disabled t)
+(show-paren-mode t)
+(column-number-mode t)
+(line-number-mode t)
+(setq-default indent-tabs-mode nil)
+(setq whitespace-line-column 80)
+(global-whitespace-mode t)
+(setq scroll-conservatively 1)
+
+
+;; disable backups
+(setq create-lockfiles nil)
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+(setq auto-save-default nil)
+(setq make-backup-files nil)
+(setq backup-inhibited t)
+
+
+(package-require 'labburn-theme)
+;(set-face-attribute 'whitespace-space nil
+;                    :background nil
+;                    :foreground "gray40")
+(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
+
 
 ;; Ace window (and other window stuff
 (package-require 'ace-window)
@@ -105,13 +125,6 @@
 (define-key isearch-mode-map (kbd "C-s") 'swiper--from-isearch)
 ;; C-c g - find file in git repo
 
-
-
-
-;; Name and E-mail
-(setq user-full-name "Andreas Hasselberg")
-(setq user-mail-address "andreas.hasselberg@gmail.com")
-
 ;; Install Erlang mode
 (package-require 'erlang)
 ;; Include the Language Server Protocol Clients
@@ -139,10 +152,6 @@
 ;; Override the default erlang-compile-tag to use completion-at-point
 (eval-after-load 'erlang
   '(define-key erlang-mode-map (kbd "C-M-i") #'company-lsp))
-;; LSP Origami Mode (for folding ranges)
-;(package-require 'lsp-origami)
-;(add-hook 'origami-mode-hook #'lsp-origami-mode)
-;(add-hook 'erlang-mode-hook #'origami-mode)
 
 (global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
@@ -150,12 +159,6 @@
 (global-set-key (kbd "C-c D") 'lsp-ui-doc-show)
 (global-set-key (kbd "C-c w") 'lsp-find-references)
 (global-set-key (kbd "C-c W") 'lsp-ui-peek-find-references)
-
-(package-require 'labburn-theme)
-;(set-face-attribute 'whitespace-space nil
-;                    :background nil
-;                    :foreground "gray40")
-(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
 
 (package-require 'which-key)
 (which-key-mode)
