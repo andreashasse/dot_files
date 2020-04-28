@@ -55,6 +55,9 @@
 
 (global-set-key "\C-x\C-c" 'death)
 
+;; Magit
+(package-require 'magit)
+
 ;; Editing
 (setq-default mouse-yank-at-point t)
 (put 'overwrite-mode 'disabled t)
@@ -77,12 +80,17 @@
 (setq make-backup-files nil)
 (setq backup-inhibited t)
 
-
+;;; Themes
 (package-require 'labburn-theme)
+(set-face-attribute 'whitespace-space nil
+                    :background nil
+                    :foreground "gray30")
+(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
+
 ;(set-face-attribute 'whitespace-space nil
 ;                    :background nil
 ;                    :foreground "gray40")
-(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
+;(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
 
 
 ;; Ace window (and other window stuff
