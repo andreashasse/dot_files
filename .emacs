@@ -9,7 +9,8 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (rainbow-mode rainbow-delimiters yasnippet which-key rjsx-mode lsp-ui lsp-elixir labburn-theme json-mode exec-path-from-shell erlang elixir-mode counsel-projectile company-lsp ace-window)))
+    (rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui company-lsp yasnippet lsp-mode erlang)))
+ '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
@@ -31,6 +32,8 @@
   (if require-name
       (require require-name)
     (require pkg)))
+
+(setq pop-up-windows nil)
 
 ;;; OSX
 ;;; I prefer cmd key for meta
@@ -83,8 +86,9 @@
 (package-require 'labburn-theme)
 (set-face-attribute 'whitespace-space nil
                     :background nil
-                    :foreground "gray30")
+                    :foreground "gray40")
 (set-face-attribute 'fringe nil :background "gray30" :foreground nil)
+
 
 (package-require 'rainbow-mode)
 
@@ -102,7 +106,12 @@
 
 (define-key global-map (kbd "C-x p") 'prev-window)
 
-;; projectile
+;; WHICH KEY
+(package-require 'which-key)
+(which-key-mode)
+(which-key-setup-minibuffer)
+
+;; PROJECTILE
 (package-require 'projectile)
 (package-require 'counsel-projectile)
 (projectile-mode)
@@ -110,27 +119,16 @@
 (setq projectile-enable-caching t)
 (setq projectile-completion-system 'ivy)
 
-(defun swiper--from-isearch ()
-  "Invoke `swiper' from isearch."
-  (interactive)
-  (let (($query (if isearch-regexp
-		    isearch-string
-		  (regexp-quote isearch-string))))
-    (isearch-exit)
-    (swiper $query)))
-
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "M-ä") 'counsel-semantic-or-imenu)
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
-(define-key isearch-mode-map (kbd "C-s") 'swiper--from-isearch)
+(define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;; C-c g - find file in git repo
 
-;; ERLANG
-;; Install Erlang mode
-(package-require 'erlang)
+;; LSP
 ;; Include the Language Server Protocol Clients
 (package-require 'lsp-mode)
 ;; Include the Yasnippet templating system
@@ -141,10 +139,6 @@
 ;; Enable code completion
 (package-require 'company-lsp)
 (push 'company-lsp company-backends)
-;; Show line and column numbers
-(add-hook 'erlang-mode-hook 'linum-mode)
-(add-hook 'erlang-mode-hook 'column-number-mode)
-(add-hook 'erlang-mode-hook 'rainbow-delimiters-mode)
 ;; Enable diagnostics
 (package-require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
@@ -153,21 +147,42 @@
 (setq lsp-ui-sideline-enable nil)
 (setq lsp-ui-doc-enable t)
 (setq lsp-ui-doc-position 'bottom)
-(add-hook 'erlang-mode-hook #'lsp)
-;; Override the default erlang-compile-tag to use completion-at-point
-(eval-after-load 'erlang
-  '(define-key erlang-mode-map (kbd "C-M-i") #'company-lsp))
 
 (global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
+
+;;(global-set-key (kbd "C-c C-n") 'flycheck-next-error)
+;;(global-set-key (kbd "C-c C-p") 'flycheck-prev-error)
+
 ; C-c d otp doc
 (global-set-key (kbd "C-c D") 'lsp-ui-doc-show)
 (global-set-key (kbd "C-c w") 'lsp-find-references)
 (global-set-key (kbd "C-c W") 'lsp-ui-peek-find-references)
 
-(package-require 'which-key)
-(which-key-mode)
-(which-key-setup-minibuffer)
+;; ERLANG
+;; Install Erlang mode
+(package-require 'erlang)
+
+;; org mode erlang snippets
+;; https://github.com/xfwduke/ob-erlang
+(add-to-list 'load-path "~/.emacs.d/site-packages")
+
+(require 'ob-erlang)
+(org-babel-do-load-languages
+    'org-babel-load-languages
+    '((erlang . t)))
+
+;; Show line and column numbers
+(add-hook 'erlang-mode-hook 'linum-mode)
+(add-hook 'erlang-mode-hook 'column-number-mode)
+(add-hook 'erlang-mode-hook 'rainbow-delimiters-mode)
+
+(add-hook 'erlang-mode-hook #'lsp)
+;; Override the default erlang-compile-tag to use completion-at-point
+(eval-after-load 'erlang
+  '(define-key erlang-mode-map (kbd "C-M-i") #'company-lsp))
+
+
 
 ;; JAVASCRIPT
 (package-require 'json-mode)
@@ -178,6 +193,8 @@
 (package-require 'elixir-mode)
 (package-require 'lsp-elixir)
 (add-hook 'elixir-mode-hook 'lsp)
+
+
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
