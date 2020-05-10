@@ -167,6 +167,15 @@
 (which-key-mode)
 (which-key-setup-minibuffer)
 
+;; JAVASCRIPT
+(package-require 'json-mode)
+(package-require 'rjsx-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
+;; ELIXIR
+(package-require 'elixir-mode)
+;(package-require 'lsp-elixir)
+;(add-hook ‘elixir-mode-hook #’lsp)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
