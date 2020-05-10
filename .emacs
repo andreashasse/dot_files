@@ -174,8 +174,8 @@
 
 ;; ELIXIR
 (package-require 'elixir-mode)
-;(package-require 'lsp-elixir)
-;(add-hook ‘elixir-mode-hook #’lsp)
+(package-require 'lsp-elixir)
+(add-hook 'elixir-mode-hook 'lsp)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
