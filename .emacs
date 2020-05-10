@@ -1,4 +1,5 @@
 ;; -*- lisp -*-
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -8,15 +9,13 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (exec-path-from-shell projectile ace-window labburn-theme which-key counsel-projectile lsp-ui company-lsp yasnippet lsp-mode erlang)))
- '(safe-local-variable-values (quote ((allout-layout . t))))
+    (rainbow-mode rainbow-delimiters yasnippet which-key rjsx-mode lsp-ui lsp-elixir labburn-theme json-mode exec-path-from-shell erlang elixir-mode counsel-projectile company-lsp ace-window)))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(whitespace-style
    (quote
     (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
-
 
 ;; Use packages
 (require 'package)
@@ -87,11 +86,7 @@
                     :foreground "gray30")
 (set-face-attribute 'fringe nil :background "gray30" :foreground nil)
 
-;(set-face-attribute 'whitespace-space nil
-;                    :background nil
-;                    :foreground "gray40")
-;(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
-
+(package-require 'rainbow-mode)
 
 ;; Ace window (and other window stuff
 (package-require 'ace-window)
@@ -133,6 +128,7 @@
 (define-key isearch-mode-map (kbd "C-s") 'swiper--from-isearch)
 ;; C-c g - find file in git repo
 
+;; ERLANG
 ;; Install Erlang mode
 (package-require 'erlang)
 ;; Include the Language Server Protocol Clients
@@ -148,6 +144,7 @@
 ;; Show line and column numbers
 (add-hook 'erlang-mode-hook 'linum-mode)
 (add-hook 'erlang-mode-hook 'column-number-mode)
+(add-hook 'erlang-mode-hook 'rainbow-delimiters-mode)
 ;; Enable diagnostics
 (package-require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
@@ -172,6 +169,15 @@
 (which-key-mode)
 (which-key-setup-minibuffer)
 
+;; JAVASCRIPT
+(package-require 'json-mode)
+(package-require 'rjsx-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
+;; ELIXIR
+(package-require 'elixir-mode)
+(package-require 'lsp-elixir)
+(add-hook 'elixir-mode-hook 'lsp)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
