@@ -6,10 +6,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
- '(menu-bar-mode nil)
+ '(menu-bar-mode t)
  '(package-selected-packages
    (quote
-    (rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui company-lsp yasnippet lsp-mode erlang)))
+    (deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui company-lsp yasnippet lsp-mode erlang)))
  '(safe-local-variable-values (quote ((allout-layout . t))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -127,6 +127,15 @@
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
 (define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;; C-c g - find file in git repo
+
+;; DEFT
+(package-require 'deft)
+(setq deft-extensions '("txt" "tex" "org"))
+(setq deft-directory "~/work/notes")
+(setq deft-recursive t)
+(setq deft-use-filename-as-title t)
+(global-set-key (kbd "C-å") 'deft)
+
 
 ;; LSP
 ;; Include the Language Server Protocol Clients
