@@ -118,6 +118,15 @@
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 (setq projectile-enable-caching t)
 (setq projectile-completion-system 'ivy)
+(setq projectile-sort-order 'recently-active)
+
+(projectile-register-project-type 'kred '(".klarna-system-metadata.json")
+                  :compile "make -sj"
+                  :test "make myday -sj"
+                  :run "bin/kred -shell"
+                  :src-dir "lib/*/src/"
+                  :test-dir "lib/*/test/"
+                  :test-suffix "_SUTIE")
 
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
