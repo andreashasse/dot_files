@@ -6,24 +6,26 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
+ '(custom-safe-themes
+   '("5e08fb7b2567442909bb538146110264afc0d8351539abd6640d2441ec812250" default))
  '(menu-bar-mode t)
  '(package-selected-packages
-   (quote
-    (deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui company-lsp yasnippet lsp-mode erlang)))
- '(safe-local-variable-values (quote ((allout-layout . t))))
+   '(org-babel-eval-in-repl ob-sh pug-mode markdown-mode diff-hl deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui company-lsp yasnippet lsp-mode erlang))
+ '(safe-local-variable-values '((allout-layout . t)))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(whitespace-style
-   (quote
-    (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
+   '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark)))
 
 ;; Use packages
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.milkbox.net/packages/") t)
-(package-initialize)
-(package-refresh-contents)
+             '("melpa" . "http://melpa.org/packages/") t)
+(when (< emacs-major-version 27)
+  (package-initialize))
+;; uncomment and remove elpa dir when you need an upgrade
+;;(package-refresh-contents)
 ;; Install a package only if it's not already installed
 (defun package-require (pkg &optional require-name)
   "Install a package only if it's not already installed."
@@ -60,6 +62,8 @@
 ;; Magit
 (package-require 'magit)
 
+;;(global-diff-hl-mode)
+
 ;; Editing
 (setq-default mouse-yank-at-point t)
 (put 'overwrite-mode 'disabled t)
@@ -67,7 +71,7 @@
 (column-number-mode t)
 (line-number-mode t)
 (setq-default indent-tabs-mode nil)
-(setq whitespace-line-column 80)
+(setq whitespace-line-column 100)
 (global-whitespace-mode t)
 (setq scroll-conservatively 1)
 
@@ -84,6 +88,7 @@
 
 ;;; Themes
 (package-require 'labburn-theme)
+(load-theme 'labburn t)
 (set-face-attribute 'whitespace-space nil
                     :background nil
                     :foreground "gray40")
@@ -133,18 +138,25 @@
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "M-ä") 'counsel-semantic-or-imenu)
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c j") 'vc-git-grep)
 (define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;; C-c g - find file in git repo
 
 ;; DEFT
 (package-require 'deft)
-(setq deft-extensions '("txt" "tex" "org"))
+(setq deft-extensions '("org" "txt" "tex"))
+(setq deft-default-extension "org")
 (setq deft-directory "~/work/notes")
 (setq deft-recursive t)
 (setq deft-use-filename-as-title t)
 (global-set-key (kbd "C-å") 'deft)
+(setq deft-text-mode 'org-mode)
+(setq deft-use-filter-string-for-filename t)
 
+(setq deft-file-naming-rules
+      '((noslash . "-")
+        (nospace . "-")
+        (case-fn . downcase)))
 
 ;; LSP
 ;; Include the Language Server Protocol Clients
@@ -160,6 +172,12 @@
 ;; Enable diagnostics
 (package-require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
+
+
+(setq split-width-threshold nil)
+(setq split-height-threshold nil)
+
+
 ;; LSP-UI
 (package-require 'lsp-ui)
 (setq lsp-ui-sideline-enable nil)
@@ -208,11 +226,9 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 ;; ELIXIR
-(package-require 'elixir-mode)
-(package-require 'lsp-elixir)
-(add-hook 'elixir-mode-hook 'lsp)
-
-
+;(package-require 'elixir-mode)
+;(package-require 'lsp-elixir)
+;(add-hook 'elixir-mode-hook 'lsp)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
