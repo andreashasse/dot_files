@@ -10,7 +10,7 @@
    '("5e08fb7b2567442909bb538146110264afc0d8351539abd6640d2441ec812250" default))
  '(menu-bar-mode t)
  '(package-selected-packages
-   '(org-babel-eval-in-repl ob-sh pug-mode markdown-mode diff-hl deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui company-lsp yasnippet lsp-mode erlang))
+   '(rjsx-mode json-mode py-autopep8 company-jedi elpy org-babel-eval-in-repl ob-sh pug-mode markdown-mode diff-hl deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui yasnippet lsp-mode erlang))
  '(safe-local-variable-values '((allout-layout . t)))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -24,8 +24,11 @@
              '("melpa" . "http://melpa.org/packages/") t)
 (when (< emacs-major-version 27)
   (package-initialize))
-;; uncomment and remove elpa dir when you need an upgrade
-;;(package-refresh-contents)
+
+;; If there are no archived package contents, refresh them
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
 ;; Install a package only if it's not already installed
 (defun package-require (pkg &optional require-name)
   "Install a package only if it's not already installed."
@@ -129,10 +132,11 @@
                   :compile "make -sj"
                   :test "make myday -sj"
                   :run "bin/kred -shell"
-                  :src-dir "lib/*/src/"
-                  :test-dir "lib/*/test/"
-                  :test-suffix "_SUTIE")
+                  :src-dir "src/"
+                  :test-dir "test/"
+                  :test-suffix "_tests")
 
+(global-set-key (kbd "C-ö j") 'projectile-find-implementation-or-test-other-window)
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -167,9 +171,6 @@
 ;; Enable logging for lsp-mode
 (setq lsp-log-io t)
 ;; Enable code completion
-(package-require 'company-lsp)
-(push 'company-lsp company-backends)
-;; Enable diagnostics
 (package-require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
@@ -211,12 +212,10 @@
 ;; Show line and column numbers
 (add-hook 'erlang-mode-hook 'linum-mode)
 (add-hook 'erlang-mode-hook 'column-number-mode)
-(add-hook 'erlang-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'erlang-mode-hook 'rainbow-mode)
 
 (add-hook 'erlang-mode-hook #'lsp)
 ;; Override the default erlang-compile-tag to use completion-at-point
-(eval-after-load 'erlang
-  '(define-key erlang-mode-map (kbd "C-M-i") #'company-lsp))
 
 
 
@@ -224,6 +223,16 @@
 (package-require 'json-mode)
 (package-require 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
+;; PYTHON
+(package-require 'elpy)
+(elpy-enable)
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
+
+;; Enable autopep8
+(package-require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
 ;; ELIXIR
 ;(package-require 'elixir-mode)
