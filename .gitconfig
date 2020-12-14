@@ -2,16 +2,14 @@
   xx = clean -dxf
   st = status
   ci = commit
-  di = diff
-  dw = diff --word-diff=color
-  co = checkout
-  l  = log --graph --pretty=format:'%C(red)%an %C(yellow)%ar %C(green)%s'
-  le  = log --graph --pretty=format:'%h, %an, %ar:%n%Cgreen %s %Creset'
-  a = log --ancestry-path
-  ll = log --pretty=format:'%C(blue)%h%C(red)%d %C(yellow)%an %C(green)%s' --decorate --stat=80,40
-  lla = log --pretty=format:"%Creset%s%Cblue\\ [%an]" --decorate
+  di = !sh -c 'git diff -b | delta'
+  review = !sh -c 'git diff -b $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0) | delta --side-by-side'
+  rb = !sh -c 'git diff -b $0...$1 | delta --side-by-side'
   dw = diff --color-words
-  md = shortlog --no-merges origin/master..
+  co = checkout
+  l  = log --graph --pretty=format:'%C(green)%h %C(yellow)%an %C(reset)%s'
+  le  = log --graph --pretty=format:'%h, %an, %ar:%n%Cgreen %s %Creset'
+  rel = shortlog --no-merges origin/stable..
   rba = !sh -c 'git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0)'
   commend = commit --amend --no-edit
 
@@ -50,7 +48,18 @@
   required = true
 [core]
   editor = emacs
+  hooksPath = /Users/andreas/build/bin
+
 [github]
   user = anha0825
-[core]
-  hooksPath = /Users/andreas/build/bin
+
+[delta]
+    plus-color = "#012800"
+    minus-color = "#340001"
+    syntax-theme = Monokai Extended
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    line-numbers = true

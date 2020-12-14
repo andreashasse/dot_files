@@ -10,7 +10,7 @@
    '("5e08fb7b2567442909bb538146110264afc0d8351539abd6640d2441ec812250" default))
  '(menu-bar-mode t)
  '(package-selected-packages
-   '(rjsx-mode json-mode py-autopep8 company-jedi elpy org-babel-eval-in-repl ob-sh pug-mode markdown-mode diff-hl deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui yasnippet lsp-mode erlang))
+   '(php-mode magit-delta org markdown-preview-mode rjsx-mode json-mode py-autopep8 company-jedi elpy org-babel-eval-in-repl ob-sh pug-mode markdown-mode diff-hl deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui yasnippet lsp-mode erlang))
  '(safe-local-variable-values '((allout-layout . t)))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -136,7 +136,13 @@
                   :test-dir "test/"
                   :test-suffix "_tests")
 
-(global-set-key (kbd "C-ö j") 'projectile-find-implementation-or-test-other-window)
+(projectile-register-project-type 'pipfile '("Pipfile")
+                  :compile "pipenv lint"
+                  :test "pipenv run pytest"
+                  :run "pipenv shell"
+                  :test-prefix "test_")
+
+(global-set-key (kbd "C-ö C-ö") 'projectile-find-implementation-or-test-other-window)
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -145,6 +151,15 @@
 (global-set-key (kbd "C-c j") 'vc-git-grep)
 (define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;; C-c g - find file in git repo
+
+;; ORG
+(package-require 'org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-agenda-files (list "~/work/notes/todo_work.org"
+                             "~/work/notes/todo_priv.org"))
+(setq org-agenda-window-setup 'current-window)
+(setq org-log-done t)
 
 ;; DEFT
 (package-require 'deft)
