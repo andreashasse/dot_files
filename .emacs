@@ -142,13 +142,16 @@
                   :run "pipenv shell"
                   :test-prefix "test_")
 
-(global-set-key (kbd "C-ö C-ö") 'projectile-find-implementation-or-test-other-window)
+(global-set-key (kbd "C-ö i") 'counsel-semantic-or-imenu)
+(global-set-key (kbd "C-ö t") 'projectile-find-implementation-or-test-other-window)
+(global-set-key (kbd "C-ö s") 'swiper-isearch-thing-at-point)
+(global-set-key (kbd "C-ö d") 'deft)
+
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "M-ä") 'counsel-semantic-or-imenu)
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-c j") 'vc-git-grep)
+(global-set-key (kbd "C-c j") 'counsel-projectile-git-grep)
 (define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
 ;; C-c g - find file in git repo
 
@@ -168,7 +171,6 @@
 (setq deft-directory "~/work/notes")
 (setq deft-recursive t)
 (setq deft-use-filename-as-title t)
-(global-set-key (kbd "C-å") 'deft)
 (setq deft-text-mode 'org-mode)
 (setq deft-use-filter-string-for-filename t)
 
@@ -180,6 +182,9 @@
 ;; LSP
 ;; Include the Language Server Protocol Clients
 (package-require 'lsp-mode)
+;; completions
+(package-require 'company)
+(package-require 'lsp-ivy)
 ;; Include the Yasnippet templating system
 (package-require 'yasnippet)
 (yas-global-mode t)
@@ -215,24 +220,14 @@
 ;; Install Erlang mode
 (package-require 'erlang)
 
-;; org mode erlang snippets
-;; https://github.com/xfwduke/ob-erlang
 (add-to-list 'load-path "~/.emacs.d/site-packages")
-
-(require 'ob-erlang)
-(org-babel-do-load-languages
-    'org-babel-load-languages
-    '((erlang . t)))
 
 ;; Show line and column numbers
 (add-hook 'erlang-mode-hook 'linum-mode)
 (add-hook 'erlang-mode-hook 'column-number-mode)
 (add-hook 'erlang-mode-hook 'rainbow-mode)
 
-(add-hook 'erlang-mode-hook #'lsp)
-;; Override the default erlang-compile-tag to use completion-at-point
-
-
+(add-hook 'erlang-mode-hook 'lsp)
 
 ;; JAVASCRIPT
 (package-require 'json-mode)

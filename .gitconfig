@@ -1,8 +1,10 @@
 [alias]
+  b = branch --show-current
+  nb = !sh -c 'git checkout -b $0 origin/stable --no-track'
   xx = clean -dxf
-  st = status
+  st = status --ignore-submodules=dirty
   ci = commit
-  di = !sh -c 'git diff -b | delta'
+  di = !sh -c 'git diff -b --ignore-submodules=dirty | delta'
   review = !sh -c 'git diff -b $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0) | delta --side-by-side'
   rb = !sh -c 'git diff -b $0...$1 | delta --side-by-side'
   dw = diff --color-words
@@ -43,9 +45,10 @@
 [push]
   default = simple
 [filter "lfs"]
-  clean = git-lfs clean %f
-  smudge = git-lfs smudge %f
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
   required = true
+	process = git-lfs filter-process
 [core]
   editor = emacs
   hooksPath = /Users/andreas/build/bin
