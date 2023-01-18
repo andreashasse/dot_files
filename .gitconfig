@@ -1,11 +1,10 @@
 [alias]
   b = branch --show-current
-  nb = !sh -c 'git checkout -b $0 origin/stable --no-track'
   xx = clean -dxf
   st = status --ignore-submodules=dirty
   ci = commit
-  di = !sh -c 'git diff -b --ignore-submodules=dirty | delta'
-  review = !sh -c 'git diff -b $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0) | delta --side-by-side'
+  di = !sh -c 'git diff -b --ignore-submodules=dirty'
+  review = !sh -c 'git diff -b $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0)'
   rb = !sh -c 'git diff -b $0...$1 | delta --side-by-side'
   dw = diff --color-words
   co = checkout
@@ -40,8 +39,17 @@
   added = yellow
   changed = green
   untracked = cyan
+
 [diff]
-  word-diff=color
+  tool = difftastic
+  external = difft
+
+[difftool]
+  prompt = false
+
+[difftool "difftastic"]
+  cmd = difft "$LOCAL" "$REMOTE"
+
 [push]
   default = simple
 [filter "lfs"]
@@ -55,14 +63,3 @@
 
 [github]
   user = anha0825
-
-[delta]
-    plus-color = "#012800"
-    minus-color = "#340001"
-    syntax-theme = Monokai Extended
-
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    line-numbers = true
