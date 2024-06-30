@@ -331,21 +331,17 @@
 (deflayer homerowmods
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    @met_a   @alt_s   @ctl_d   @sft_f   g   h   @sft_j   @ctl_k   @alt_l   @met_; _ _
-  _    _    _    @spe_c    @num_    _    _    _    @spec    _  _ _
-  _    _    _             _              _    _    _    _
+  XX    @met_a   @alt_s   @ctl_d   @sft_f   g   h   @sft_j   @ctl_k   @alt_l   @met_; _ _
+  XX   _    _ @spe_c @num_v _   _    _ @spe_m  _    _    XX
+  XX   XX   XX             _              XX   XX   XX   XX
 )
-
-
-
-
 
 (deflayer qwerty
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  lctl a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           spc            ralt rmet cmp  rctl
+  XX a    s    d    f    g    h    j    k    l    ;    '    ret
+  XX z    x    c    v    b    n    m    ,    .    /    XX
+  XX   XX   XX           spc            XX XX XX  XX
 )
 
 (deflayer phone :source numpad
@@ -380,10 +376,10 @@
 )
 
 (deflayer special
-  _    _    _   _    _    _    _    _    _    _    _    _    _    _
-  _    !    u    #    €   %   &  /    \(    \)   =    -    _    _
-  _    _    _    _    _    XX   *    4    5    6    +    _    _
-  _    _    \(   \)   .    XX   0    1    2    3    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    \(   \)   _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
   _    _    _              _              _    _    _    _
 )
 
@@ -460,8 +456,10 @@
   alt_s (tap-hold-next-release 200 s lalt)
   ctl_d (tap-hold-next-release 200 d lctl)
   sft_f (tap-hold-next-release 200 f lsft)
-  spe_ (tap-hold-next-release 200 c @spec)
+  spe_c (tap-hold-next-release 200 c @spec)
+  num_v (tap-hold-next-release 200 v @num)
 
+  spe_m (tap-hold-next-release 200 m @spec)
   sft_j (tap-hold-next-release 200 j rsft)
   ctl_k (tap-hold-next-release 200 k rctl)
   alt_l (tap-hold-next-release 200 l lalt)
