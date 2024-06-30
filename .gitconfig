@@ -47,7 +47,7 @@
   default = simple
 
 [core]
-  editor = "emacs -nw"
+  editor = "emacs"
   hooksPath = /Users/andreas/build/bin
 
 [github]
