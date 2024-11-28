@@ -18,8 +18,10 @@
 
 ;; Add MELPA to package archives
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; UCMOMMENT WHEN INSTALLING / UPGRADING PACKAGES
+;;(package-initialize)
+
 ;(package-refresh-contents)
 
 ;; Set up use-package to automate package installation
