@@ -83,7 +83,7 @@
       "ctrl-c ! p": "editor::GoToPrevDiagnostic",
       // iedit
       "ctrl-;": "editor::Rename",
-      // Custom
+      // I done like this
       //"cmd-p": "editor::MoveLineUp",
       //"cmd-n": "editor::MoveLineDown",
       "ctrl-c n": "editor::GoToHunk",
@@ -171,7 +171,8 @@
       "cmd-6": ["pane::ActivateItem", 5],
       "cmd-7": ["pane::ActivateItem", 6],
       "cmd-8": ["pane::ActivateItem", 7],
-      "cmd-9": ["pane::ActivateItem", 8]
+      "cmd-9": ["pane::ActivateItem", 8],
+      "ctrl-x p f": "project_search::ToggleFocus"
     }
   },
   {
@@ -188,8 +189,9 @@
       "ctrl-c ! l": "diagnostics::Deploy",
       // Custom
       //"cmd-!": "terminal_panel::ToggleFocus",
-      "cmd-ctrl-s": "workspace::ToggleLeftDock"
+      "cmd-ctrl-s": "workspace::ToggleLeftDock",
       // "ctrl-h k": "zed::OpenKeymap" // NOT WORKING
+      "ctrl-x p f": "pane::DeploySearch"
     }
   },
   {
@@ -199,6 +201,18 @@
       "cmd-f": ["terminal::SendKeystroke", "ctrl-right"],
       "cmd-b": ["terminal::SendKeystroke", "ctrl-left"],
       "cmd-t": "workspace::NewTerminal"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "ctrl-x p f": "project_panel::NewSearchInDirectory"
+    }
+  },
+  {
+    "context": "ProjectSearchBar",
+    "bindings": {
+      "ctrl-x p f": "search::FocusSearch"
     }
   }
 ]
