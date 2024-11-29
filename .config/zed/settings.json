@@ -19,7 +19,7 @@
   "buffer_font_size": 12,
   "theme": {
     "mode": "system",
-    "light": "One Dark",
+    "light": "Solarized Dark",
     "dark": "One Dark"
   },
   "buffer_font_features": {
