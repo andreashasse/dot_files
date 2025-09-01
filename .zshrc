@@ -1,9 +1,11 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+#fi
+
+eval "$(starship init zsh)"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -17,7 +19,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -79,9 +81,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(aws git zsh-interactive-cd)
+# plugins=(aws git zsh-interactive-cd)
 
 source $ZSH/oh-my-zsh.sh
+source ~/.zshenv
 
 # User configuration
 
@@ -110,7 +113,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -131,6 +134,10 @@ alias a_prod="export AWS_PROFILE=cloud-admin-prod && kubectx arn:aws:eks:eu-nort
 alias a_systest="export AWS_PROFILE=cloud-admin-test && kubectx arn:aws:eks:eu-north-1:361629632765:cluster/systest"
 alias a_uat="export AWS_PROFILE=cloud-admin-test && kubectx arn:aws:eks:eu-north-1:361629632765:cluster/uat"
 alias a_tools="export AWS_PROFILE=cloud-admin-tools && kubectx arn:aws:eks:eu-north-1:660263384063:cluster/tools"
+alias docker_login2="aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 660263384063.dkr.ecr.eu-north-1.amazonaws.com"
+alias morning="a_tools && docker_login2"
+
+
 
 alias a_iot_systest="export AWS_PROFILE=iot-dev-test && kubectx arn:aws:eks:eu-north-1:361629632765:cluster/systest"
 alias a_iot_uat="export AWS_PROFILE=iot-dev-test && kubectx arn:aws:eks:eu-north-1:361629632765:cluster/uat"
@@ -182,7 +189,7 @@ function set_title_to_git_directory() {
   fi
 }
 # Hook into the prompt to update the title before each command prompt
-precmd_functions+=set_title_to_git_directory
+# precmd_functions+=set_title_to_git_directory
 
 
 rfv() (
@@ -206,3 +213,10 @@ rfv() (
 docker_login() {
   aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 660263384063.dkr.ecr.eu-north-1.amazonaws.com
 }
+
+# Navi
+export NAVI_PATH="$HOME/.config/navi/cheats:${NAVI_PATH}"
+#export NAVI_FZF_OVERRIDES="--height=20 --no-select-1 --no-exit-0"
+eval "$(navi widget zsh)"
+#bindkey '^G' navi-widget
+bindkey -M emacs '^G' _navi_widget

@@ -1,5 +1,6 @@
 [alias]
   b = branch --show-current
+  bs = for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short) %(committerdate:relative)'
   xx = clean -dxf
   st = status --ignore-submodules=dirty
   ci = commit -v
@@ -52,3 +53,7 @@
 
 [github]
   user = andreashasse
+[sequence]
+	editor = interactive-rebase-tool
+[init]
+	defaultBranch = main

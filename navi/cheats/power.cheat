@@ -1,0 +1,111 @@
+% git
+
+# Switch to branch
+git switch <branch>
+$ branch: git branch --format="%(refname:short)"
+
+# Fetch all & prune
+git fetch --all --prune
+
+# Push current branch to origin (set upstream)
+git push -u origin <branch>
+$ branch: git branch --show-current
+
+# Hard reset current branch to remote (DANGEROUS)
+git reset --hard origin/<branch>
+$ branch: git branch
+
+# Rebase current branch onto another
+git rebase <onto_branch>
+$ onto_branch: git for-each-ref --format='%(refname:short)' refs/heads
+
+# Show commits between two refs
+git log --oneline <from>..<to>
+$ from: git for-each-ref --format='%(refname:short)' refs/heads refs/tags
+$ to: git for-each-ref --format='%(refname:short)' refs/heads refs/tags
+
+% kubectl
+
+# Pick namespace + list pods
+kubectl -n <anamespace> get pods
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+
+# Logs for a pod
+kubectl logs -n <anamespace> <pod>
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ pod: kubectl get pods -n <anamespace> -o name | cut -d/ -f2
+
+# Follow logs for a container
+kubectl logs -f -n <anamespace> <apod> -c <acontainer>
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ apod: kubectl get pods -n <anamespace> -o name | cut -d/ -f2
+$ acontainer: kubectl get pod -n <anamespace> <apod> -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
+
+# Exec shell in pod
+kubectl exec -it -n <anamespace> <pod> -- /bin/bash
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ pod: kubectl get pods -n <anamespace> -o name | cut -d/ -f2
+
+# Port-forward service
+kubectl -n <anamespace> port-forward svc/<service> <local_port>:<service_port>
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ service: kubectl get svc -n <anamespace> -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ local_port: printf "8080\n3000\n8000\n9000"
+$ service_port: kubectl get svc -n <namespace> <service> -o jsonpath='{range .spec.ports[*]}{.port}{"\n"}{end}'
+
+# Describe resource
+kubectl -n <anamespace> describe <kind>/<name>
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ kind: printf "pod\ndeploy\nsts\nsvc\ningress\ncm\nsecret\nns"
+$ name: kubectl get -n <anamespace> <kind> -o name | cut -d/ -f2
+
+# Decode secret keys
+kubectl -n <anamespace> get secret <secret> -o jsonpath='{.data}' | jq -r 'to_entries[] | "\(.key)=\(.value|@base64d)"'
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ secret: kubectl get secrets -n <anamespace> -o name | cut -d/ -f2
+
+# Copy a file to a pod
+kubectl cp <file> <anamespace>/<pod>:/tmp/<file>
+$ anamespace: kubectl get ns -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+$ pod: kubectl get pods -n <anamespace> -o name | cut -d/ -f2
+$ file: ls
+
+% files & processes
+
+# Grep recursively (ignore .git)
+rg -n <pattern>
+$ pattern: printf ""
+
+# Quick HTTP server (Python 3)
+python3 -m http.server <port>
+$ port: printf "8000\n8080\n3000\n5000"
+
+% http
+# curl JSON with method + headers
+curl -s -X <method> -H "Content-Type: application/json" <url> -d '<json>'
+$ method: printf "GET\nPOST\nPUT\nPATCH\nDELETE"
+$ url: printf "http://localhost:8080/"
+$ json: printf "{}"
+
+% archives
+
+# Create tar.gz of directory
+tar -czf <out.tar.gz> <dir>
+$ out.tar.gz: printf "archive.tar.gz"
+$ dir: printf "./"
+
+# Extract tar.gz
+tar -xzf <file.tar.gz>
+$ file.tar.gz: ls -1 *.tar.gz 2>/dev/null
+
+% make
+# Run make target in current directory
+make <target>
+$ target: awk -F: '/^[a-zA-Z0-9][^$#\/\t=]*:/{print $1}' Makefile 2>/dev/null | sort -u
+
+% misc
+# Create secret
+openssl rand -hex 32
+
+# Edit navi cheats
+zed ~/.config/navi/cheats/power.cheat
