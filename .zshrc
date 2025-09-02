@@ -165,7 +165,7 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 ### End of Zinit's installer chunk
 export EDITOR="zed"
-export GIT_EDITOR="zed --wait"
+export GIT_EDITOR="hx"
 
 jwt-decode() {
   jq -R 'split(".") |.[0:2] | map(gsub("-"; "+") | gsub("_"; "/") | gsub("%3D"; "=") | @base64d) | map(fromjson)' <<< $1

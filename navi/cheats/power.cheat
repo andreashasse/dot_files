@@ -1,3 +1,9 @@
+% aira
+
+# Auth
+~/src/github/vh-heatly/infra/devtools/auth <env> && export AUTH_TOKEN=$(pbpaste)
+$ env: printf "local\nsystest\nuat\nprod"
+
 % git
 
 # Switch to branch

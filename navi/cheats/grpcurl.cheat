@@ -1,9 +1,5 @@
 % grpcurl
 
-# list all protos
-grpcurl -plaintext -H "authorization: Bearer {token}" -proto <protobuf_file> -d @{{json_file}} localhost:50051 list
-$ protobuf_file: ls app/proto/*.proto
-
 # list all things
 grpcurl -plaintext -H "authorization: Bearer <auth>" -proto <protobuf_file> -d @ <host> <command> < <json_file>
 $ auth: echo $AUTH_TOKEN
