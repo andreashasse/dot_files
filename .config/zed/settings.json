@@ -7,6 +7,11 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "outline_panel": {
+    "dock": "right"
+  },
+  "show_whitespaces": "boundary",
+  "show_signature_help_after_edits": true,
   "tab_bar": {
     "show": true
   },
@@ -29,12 +34,12 @@
       "model": "claude-sonnet-4"
     },
   },
-  "ui_font_size": 13,
+  "ui_font_size": 15,
   "buffer_font_size": 13,
   "theme": {
     "mode": "system",
     "light": "Gruvbox Dark Hard",
-    "dark": "One Dark"
+    "dark": "Gruvbox Dark Soft"
   },
   "buffer_font_features": {
     // Disable ligatures:
@@ -63,5 +68,8 @@
   "indent_guides": {
     "enabled": true,
     "coloring": "indent_aware"
+  },
+  "experimental.theme_overrides": {
+    "editor.document_highlight.bracket_background": "#884400"
   }
 }

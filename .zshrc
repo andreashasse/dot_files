@@ -220,3 +220,11 @@ export NAVI_PATH="$HOME/.config/navi/cheats:${NAVI_PATH}"
 eval "$(navi widget zsh)"
 #bindkey '^G' navi-widget
 bindkey -M emacs '^G' _navi_widget
+
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+export PATH="$(brew --prefix ruby)/bin:$PATH"
+export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
