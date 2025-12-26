@@ -1,5 +1,12 @@
 [
   {
+    "context": "Editor",
+    "bindings": {
+      "v": "editor::SelectLargerSyntaxNode",
+      "shift-v": "editor::SelectSmallerSyntaxNode"
+    }
+  },
+  {
     "context": "Terminal",
     "bindings": {
       "shift-enter": [
