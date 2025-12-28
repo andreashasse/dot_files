@@ -1,6 +1,6 @@
 [
   {
-    "context": "Editor",
+    "context": "Editor && vim_mode == visual",
     "bindings": {
       "v": "editor::SelectLargerSyntaxNode",
       "shift-v": "editor::SelectSmallerSyntaxNode"
