@@ -7,6 +7,12 @@
     }
   },
   {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      "ctrl-d": "editor::Delete"
+    }
+  },
+  {
     "context": "Terminal",
     "bindings": {
       "shift-enter": [
