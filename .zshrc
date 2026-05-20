@@ -1,3 +1,6 @@
+# Workaround for elp/eqwalizer JAR disappearing from temp on macOS
+export ELP_EQWALIZER_PATH="$HOME/.local/share/elp/eqwalizer.jar"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -221,10 +224,22 @@ eval "$(navi widget zsh)"
 #bindkey '^G' navi-widget
 bindkey -M emacs '^G' _navi_widget
 
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
-
 export PATH="$(brew --prefix ruby)/bin:$PATH"
 export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
 
 npm config set prefix ~/.npm-global
 export PATH=~/.npm-global/bin:$PATH
+
+# opencode
+export PATH=/Users/andreashasselberg/.opencode/bin:$PATH
+
+# bun completions
+[ -s "/Users/andreashasselberg/.bun/_bun" ] && source "/Users/andreashasselberg/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
