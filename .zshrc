@@ -240,3 +240,9 @@ export PATH=/Users/andreashasselberg/.opencode/bin:$PATH
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 eval "$(mise activate zsh)"
+
+# dexter completions
+eval "$(dexter completion zsh)"
+
+# task completions
+eval "$(task --completion zsh)"
