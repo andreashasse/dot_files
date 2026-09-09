@@ -60,6 +60,11 @@
     "enabled_in_text_threads": false
   },
   "vim_mode": true,
+  "vim": {
+    // Bara yank når systemets urklipp. Med standardvärdet "always" skriver
+    // varje d och x över det du senast kopierat.
+    "use_system_clipboard": "on_yank"
+  },
   "agent": {
     "favorite_models": [
       {
