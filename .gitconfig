@@ -1,3 +1,7 @@
+[user]
+  name = Andreas Hasselberg
+  email = andreas.hasselberg@gmail.com
+
 [alias]
   b = branch --show-current
   bs = for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short) %(committerdate:relative)'
@@ -6,7 +10,6 @@
   ci = commit -v
   di = !sh -c 'git diff -b --ignore-submodules=dirty'
   review = !sh -c 'git diff -b $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0)'
-  rb = !sh -c 'git diff -b $0...$1 | delta --side-by-side'
   dw = diff --color-words
   co = checkout
   l  = log --graph --pretty=format:'%C(green)%h %C(yellow)%an %C(reset)%s'
@@ -14,10 +17,6 @@
   rel = shortlog --no-merges origin/stable..
   rba = !sh -c 'git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) $0)'
   commend = commit --amend --no-edit
-
-[user]
-  email = andreas.hasselberg@gmail.com
-  name = Andreas Hasselberg
 
 [color]
   branch = auto
@@ -48,12 +47,10 @@
   default = simple
 
 [core]
-  editor = "emacs"
-  hooksPath = /Users/andreas/build/bin
+  editor = vim
 
 [github]
   user = andreashasse
-[sequence]
-	editor = interactive-rebase-tool
+
 [init]
-	defaultBranch = main
+  defaultBranch = main
