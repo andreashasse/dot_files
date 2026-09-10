@@ -3,23 +3,35 @@ export ELP_EQWALIZER_PATH="$HOME/.local/share/elp/eqwalizer.jar"
 
 # --- mise: verktyg och språkversioner -------------------------------------
 # Måste ligga först, resten nedan förutsätter att verktygen finns i PATH.
-eval "$(mise activate zsh)"
+# Varje verktyg nedan är villkorat, så att filen laddar rent på en maskin
+# där ingenting är installerat än.
+if (( $+commands[mise] )); then
+  eval "$(mise activate zsh)"
+fi
 
 # --- fzf: fuzzy-sökning ---------------------------------------------------
 # ctrl+t väljer fil, alt+c hoppar till katalog, ** + tab kompletterar sökvägar.
 # fd som källa gör sökningen snabb och respekterar .gitignore.
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
-source <(fzf --zsh)
+if (( $+commands[fd] )); then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
+fi
+if (( $+commands[fzf] )); then
+  source <(fzf --zsh)
+fi
 
 # --- zoxide: smartare cd --------------------------------------------------
 # z <del av sökväg> hoppar till kataloger du besökt ofta, zi väljer interaktivt.
-eval "$(zoxide init zsh)"
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+fi
 
 # --- atuin: historik ------------------------------------------------------
 # Sist av alla, så att atuins ctrl+r vinner över fzf:s variant av samma tangent.
-eval "$(atuin init zsh)"
+if (( $+commands[atuin] )); then
+  eval "$(atuin init zsh)"
+fi
 
 # --- prompt ---------------------------------------------------------------
 # Kort prompt: katalog, sedan en grå upplysning, sedan en pil som blir röd
@@ -82,7 +94,9 @@ compinit
 # bat är cat med syntaxfärger och radnummer. --paging=never gör att korta
 # filer skrivs rakt ut i stället för att öppnas i en pager.
 # Behöver du riktiga cat, skriv "command cat" eller "\cat".
-alias cat='bat --paging=never'
+if (( $+commands[bat] )); then
+  alias cat='bat --paging=never'
+fi
 
 # --- editor ---------------------------------------------------------------
 # --wait gör att verktyg som väntar in redigeringen fungerar, i stället för
