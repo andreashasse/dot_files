@@ -7,6 +7,8 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "base_keymap": "Emacs",
+  "icon_theme": "Zed (Default)",
   "cli_default_open_behavior": "new_window",
   "project_panel": {
     "dock": "right"
@@ -80,9 +82,9 @@
   "ui_font_size": 15,
   "buffer_font_size": 13,
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "Gruvbox Dark Hard",
-    "dark": "Gruvbox Dark Soft"
+    "dark": "Gruvbox Dark"
   },
   "buffer_font_features": {
     // Disable ligatures:
@@ -100,6 +102,11 @@
   },
   "formatter": "language_server",
   "autosave": "on_focus_change",
+  "auto_install_extensions": {
+    "elixir": true,
+    "erlang": true,
+    "dexter": true
+  },
   "languages": {
     "Erlang": {
       "language_servers": [
@@ -109,8 +116,9 @@
     },
     "Elixir": {
       "language_servers": [
-        "expert",
+        "dexter",
         "!elixir-ls",
+        "!expert",
         "!next-ls",
         "!lexical",
         "..."
@@ -118,8 +126,9 @@
     },
     "HEEx": {
       "language_servers": [
-        "expert",
+        "dexter",
         "!elixir-ls",
+        "!expert",
         "!next-ls",
         "!lexical",
         "..."
