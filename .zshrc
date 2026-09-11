@@ -104,3 +104,14 @@ fi
 # ~/.gitconfig, och påverkas inte av detta.
 export EDITOR='zed --wait'
 export VISUAL="$EDITOR"
+
+# --- autosuggestions och syntaxfärgning -----------------------------------
+# Ordningen är inte valfri: zsh-syntax-highlighting måste vara det sista som
+# sourcas i filen, den lindar in alla widgets som skapats innan den. Lägger du
+# något efter den slutar färgningen fungera för det.
+if [[ -r /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+if [[ -r /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
