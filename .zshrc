@@ -115,3 +115,7 @@ fi
 if [[ -r /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+export PATH="$HOME/.local/bin:$PATH"
+
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
