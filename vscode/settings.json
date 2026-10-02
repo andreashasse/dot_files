@@ -1,0 +1,25 @@
+// VS Code user settings. Linked from
+// ~/Library/Application Support/Code/User/settings.json.
+// Extensions are listed in extensions.txt next to this file.
+{
+  // Same look as Emacs (doom-gruvbox) and Zed (Gruvbox Dark).
+  "workbench.colorTheme": "Gruvbox Dark Medium",
+  "editor.fontFamily": "'FiraCode Nerd Font Mono', Menlo, monospace",
+  "editor.fontSize": 13,
+  "editor.fontLigatures": false,
+  "editor.minimap.enabled": false,
+
+  // Emacs keys (emacs-mcx). Command is Meta, like in Emacs. Option is not,
+  // so it still types special characters such as ö.
+  "emacs-mcx.useMetaPrefixMacCmd": true,
+  "emacs-mcx.useMetaPrefixAlt": false,
+
+  // Elixir and HEEx use Dexter, found through the mise shim on PATH.
+  // Format with Dexter on save.
+  "[elixir][phoenix-heex]": {
+    "editor.formatOnSave": true
+  },
+
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true
+}
