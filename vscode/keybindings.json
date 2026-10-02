@@ -21,8 +21,8 @@
     "when": "editorHasReferenceProvider && config.emacs-mcx.useMetaPrefixMacCmd"
   },
   // M-t and M-g i list the symbols in the file, like consult-imenu in
-  // Emacs. The code follows the selection. Cmd-Shift-O (VS Code and Zed)
-  // also works. M-t replaces emacs-mcx's transpose-words.
+  // Emacs. The code follows the selection. M-t replaces emacs-mcx's
+  // transpose-words.
   {
     "key": "cmd+t",
     "command": "workbench.action.gotoSymbol",
@@ -32,5 +32,18 @@
     "key": "cmd+g i",
     "command": "workbench.action.gotoSymbol",
     "when": "!terminalFocus"
+  },
+  // M-o grows the selection one syntax level, M-O shrinks it, like expreg
+  // in Emacs. They replace Open File (Cmd-O) and the default symbol list
+  // key (Cmd-Shift-O), which is on M-t instead.
+  {
+    "key": "cmd+o",
+    "command": "editor.action.smartSelect.expand",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "editor.action.smartSelect.shrink",
+    "when": "editorTextFocus"
   }
 ]

@@ -192,6 +192,14 @@
 ;; TAB indents first, then completes.
 (setq tab-always-indent 'complete)
 
+;;;; Selection
+
+;; Grow or shrink the selection along the syntax tree (tree-sitter when the
+;; mode has it): M-o expands one level, M-O shrinks one level.
+(use-package expreg
+  :bind (("M-o" . expreg-expand)
+         ("M-O" . expreg-contract)))
+
 ;;;; Git
 
 (use-package magit
