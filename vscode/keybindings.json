@@ -19,5 +19,12 @@
     "key": "cmd+shift+/",
     "command": "-references-view.findReferences",
     "when": "editorHasReferenceProvider && config.emacs-mcx.useMetaPrefixMacCmd"
+  },
+  // M-g i lists the symbols in the file, like consult-imenu in Emacs.
+  // The code follows the selection. Cmd-Shift-O (VS Code and Zed) also works.
+  {
+    "key": "cmd+g i",
+    "command": "workbench.action.gotoSymbol",
+    "when": "!terminalFocus"
   }
 ]
