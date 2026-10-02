@@ -95,6 +95,23 @@
   :ensure nil
   :config (which-key-mode 1))
 
+;;;; Dired
+
+;; macOS ls does not support --dired. Use GNU ls (gls, from coreutils)
+;; when it is installed, and otherwise turn the option off.
+(use-package dired
+  :ensure nil
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (if (executable-find "gls")
+      (setq insert-directory-program "gls"
+            dired-listing-switches "-alh --group-directories-first")
+    (setq dired-use-ls-dired nil
+          dired-listing-switches "-alh"))
+  ;; ( toggles the details (permissions, owner, size, date).
+  (setq dired-dwim-target t
+        dired-kill-when-opening-new-dired-buffer t))
+
 ;;;; Windows
 
 (use-package ace-window
@@ -179,9 +196,52 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
+;; Git changes in the left fringe, in two kinds:
+;; - Full marks: uncommitted changes (staged or not), updated while you type.
+;; - Flat, darker marks: lines that commits on this branch changed, compared
+;;   with the point where the branch left the default branch.
+;; C-x v [ and C-x v ] jump between changes, C-x v * shows the change at point.
+(defun my/git-default-branch ()
+  "Return the default branch of the remote, such as \"origin/master\"."
+  (or (ignore-errors
+        (car (process-lines "git" "symbolic-ref" "--short" "refs/remotes/origin/HEAD")))
+      (seq-find (lambda (ref)
+                  (zerop (call-process "git" nil nil nil
+                                       "rev-parse" "--verify" "--quiet" ref)))
+                '("origin/main" "origin/master" "main" "master"))))
+
+(defun my/diff-hl-set-branch-reference ()
+  "Compare this buffer with the commit where the branch left the default branch."
+  (when-let ((root (and buffer-file-name
+                         (locate-dominating-file buffer-file-name ".git"))))
+    (let* ((default-directory root)
+           (base (when-let ((branch (my/git-default-branch)))
+                   (ignore-errors
+                     (car (process-lines "git" "merge-base" "HEAD" branch))))))
+      (unless (equal base diff-hl-reference-revision)
+        (setq-local diff-hl-reference-revision base)
+        (diff-hl-update)))))
+
+(defun my/diff-hl-refresh-branch-references ()
+  "Recompute the branch reference in all buffers, for example after a checkout."
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (bound-and-true-p diff-hl-mode)
+        (my/diff-hl-set-branch-reference)))))
+
 (use-package diff-hl
   :init (global-diff-hl-mode 1)
-  :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+  :hook ((diff-hl-mode . my/diff-hl-set-branch-reference)
+         (magit-post-refresh . my/diff-hl-refresh-branch-references)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  (setq diff-hl-update-async t)
+  (diff-hl-flydiff-mode 1)
+  ;; Darker Gruvbox colors for the branch marks, so they differ from the
+  ;; uncommitted ones.
+  (set-face-attribute 'diff-hl-reference-insert nil :background "#79740e" :foreground "#79740e")
+  (set-face-attribute 'diff-hl-reference-change nil :background "#076678" :foreground "#076678")
+  (set-face-attribute 'diff-hl-reference-delete nil :background "#9d0006" :foreground "#9d0006"))
 
 ;;;; GitHub
 
@@ -205,11 +265,30 @@
 (use-package forge
   :after magit)
 
-;; Review PRs: C-c r, then paste the PR URL. In the review buffer,
-;; C-c C-c comments on the line at point, C-c C-f opens the file at that
-;; line, and C-c C-s submits the review.
+;; Review PRs: check out the PR (gh pr checkout N), then C-c r in the
+;; project and paste the PR URL. In the review buffer, C-c C-c comments on
+;; the line at point (mark a region for several lines), C-c C-g opens the
+;; local file at that line, and C-c C-s submits the review.
 (use-package pr-review
-  :bind ("C-c r" . pr-review))
+  :bind (("C-c r" . pr-review)
+         :map pr-review-mode-map
+         ("C-c C-g" . my/pr-review-visit-local-file)))
+
+(defun my/pr-review-visit-local-file ()
+  "Open the local file at the diff line at point in the other window.
+The file is looked up in the Git checkout that the review was opened
+from, so the language server and project search work there."
+  (interactive)
+  (pcase (pr-review--get-diff-line-info (point))
+    (`(,side ,file . ,line)
+     (let ((root (or (locate-dominating-file default-directory ".git")
+                     (read-directory-name "Local checkout of the PR: "))))
+       (find-file-other-window (expand-file-name file root))
+       (goto-char (point-min))
+       (forward-line (1- line))
+       (when (equal side "LEFT")
+         (message "This line was removed in the PR. Showing the same line number in the local file."))))
+    (_ (user-error "Move point to a line in the diff"))))
 
 ;;;; Tree-sitter
 
