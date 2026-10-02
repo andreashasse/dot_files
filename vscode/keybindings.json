@@ -1,0 +1,23 @@
+// VS Code key bindings. Linked from
+// ~/Library/Application Support/Code/User/keybindings.json.
+[
+  // M-? peeks at references inline, like M-? in Emacs. emacs-mcx opens the
+  // references side panel instead, so turn that binding off.
+  // On a Swedish keyboard ? is Shift and the key right of 0, which VS Code
+  // calls [Minus] by its US position. cmd+shift+/ covers a US keyboard.
+  {
+    "key": "cmd+shift+[Minus]",
+    "command": "editor.action.referenceSearch.trigger",
+    "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
+  },
+  {
+    "key": "cmd+shift+/",
+    "command": "editor.action.referenceSearch.trigger",
+    "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !isInEmbeddedEditor"
+  },
+  {
+    "key": "cmd+shift+/",
+    "command": "-references-view.findReferences",
+    "when": "editorHasReferenceProvider && config.emacs-mcx.useMetaPrefixMacCmd"
+  }
+]

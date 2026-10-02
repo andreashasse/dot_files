@@ -20,6 +20,11 @@
     "editor.formatOnSave": true
   },
 
+  // Gutter marks for the whole PR, next to the uncommitted changes, when
+  // the branch is a PR checked out through the GitHub Pull Requests
+  // extension. Needs a window reload after changing.
+  "githubPullRequests.quickDiff": true,
+
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true
 }
