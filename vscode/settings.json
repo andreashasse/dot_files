@@ -7,6 +7,7 @@
   "editor.fontFamily": "'FiraCode Nerd Font Mono', Menlo, monospace",
   "editor.fontSize": 13,
   "editor.fontLigatures": false,
+  "editor.minimap.enabled": false,
 
   // Emacs keys (emacs-mcx). Command is Meta, like in Emacs. Option is not,
   // so it still types special characters such as ö.
