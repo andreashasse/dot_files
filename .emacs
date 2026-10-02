@@ -222,11 +222,30 @@
 (use-package forge
   :after magit)
 
-;; Review PRs: C-c r, then paste the PR URL. In the review buffer,
-;; C-c C-c comments on the line at point, C-c C-f opens the file at that
-;; line, and C-c C-s submits the review.
+;; Review PRs: check out the PR (gh pr checkout N), then C-c r in the
+;; project and paste the PR URL. In the review buffer, C-c C-c comments on
+;; the line at point (mark a region for several lines), C-c C-g opens the
+;; local file at that line, and C-c C-s submits the review.
 (use-package pr-review
-  :bind ("C-c r" . pr-review))
+  :bind (("C-c r" . pr-review)
+         :map pr-review-mode-map
+         ("C-c C-g" . my/pr-review-visit-local-file)))
+
+(defun my/pr-review-visit-local-file ()
+  "Open the local file at the diff line at point in the other window.
+The file is looked up in the Git checkout that the review was opened
+from, so the language server and project search work there."
+  (interactive)
+  (pcase (pr-review--get-diff-line-info (point))
+    (`(,side ,file . ,line)
+     (let ((root (or (locate-dominating-file default-directory ".git")
+                     (read-directory-name "Local checkout of the PR: "))))
+       (find-file-other-window (expand-file-name file root))
+       (goto-char (point-min))
+       (forward-line (1- line))
+       (when (equal side "LEFT")
+         (message "This line was removed in the PR. Showing the same line number in the local file."))))
+    (_ (user-error "Move point to a line in the diff"))))
 
 ;;;; Tree-sitter
 
