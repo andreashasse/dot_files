@@ -71,10 +71,25 @@
 
 ;;;; Look
 
-(use-package gruvbox-theme
-  :config (load-theme 'gruvbox-dark-medium t))
+;; Gruvbox Dark, like Zed. The Doom version also colors the newer
+;; tree-sitter faces (function calls, properties, operators).
+(use-package doom-themes
+  :config (load-theme 'doom-gruvbox t))
 
-(set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 130)
+;; Color as much as tree-sitter can, like Zed does: also function calls,
+;; variables, operators and brackets.
+(setq treesit-font-lock-level 4)
+
+;; Mark the indentation levels with thin lines, like Zed.
+(use-package indent-bars
+  :hook (prog-mode . indent-bars-mode)
+  :config (setq indent-bars-treesit-support t))
+
+(set-face-attribute 'default nil
+                    :family (if (find-font (font-spec :family "FiraCode Nerd Font Mono"))
+                                "FiraCode Nerd Font Mono"
+                              "Menlo")
+                    :height 130)
 
 (use-package which-key
   :ensure nil
@@ -167,6 +182,34 @@
 (use-package diff-hl
   :init (global-diff-hl-mode 1)
   :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
+;;;; GitHub
+
+;; Ghub (used by Forge and pr-review) looks for tokens in ~/.authinfo.
+;; When none is there, ask the gh CLI, which keeps its token in the keychain.
+;; The GitHub username comes from `github.user' in .gitconfig.
+(defvar my/gh-token nil)
+(with-eval-after-load 'ghub
+  (define-advice ghub--token (:around (fn host username package &optional nocreate forge) gh-cli)
+    (or (funcall fn host username package t forge)
+        (and (memq forge '(nil github))
+             (or my/gh-token
+                 (let ((token (string-trim
+                               (shell-command-to-string "gh auth token 2>/dev/null"))))
+                   (unless (string-empty-p token)
+                     (setq my/gh-token token)))))
+        (funcall fn host username package nocreate forge))))
+
+;; Forge: list, read and check out issues and PRs from Magit.
+;; In the Magit status buffer, N opens the Forge menu.
+(use-package forge
+  :after magit)
+
+;; Review PRs: C-c r, then paste the PR URL. In the review buffer,
+;; C-c C-c comments on the line at point, C-c C-f opens the file at that
+;; line, and C-c C-s submits the review.
+(use-package pr-review
+  :bind ("C-c r" . pr-review))
 
 ;;;; Tree-sitter
 
