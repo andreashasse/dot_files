@@ -1,0 +1,3 @@
+remoteoss.dexter-lsp
+tuttieee.emacs-mcx
+jdinhlife.gruvbox
