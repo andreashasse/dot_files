@@ -20,8 +20,14 @@
     "command": "-references-view.findReferences",
     "when": "editorHasReferenceProvider && config.emacs-mcx.useMetaPrefixMacCmd"
   },
-  // M-g i lists the symbols in the file, like consult-imenu in Emacs.
-  // The code follows the selection. Cmd-Shift-O (VS Code and Zed) also works.
+  // M-t and M-g i list the symbols in the file, like consult-imenu in
+  // Emacs. The code follows the selection. Cmd-Shift-O (VS Code and Zed)
+  // also works. M-t replaces emacs-mcx's transpose-words.
+  {
+    "key": "cmd+t",
+    "command": "workbench.action.gotoSymbol",
+    "when": "editorTextFocus"
+  },
   {
     "key": "cmd+g i",
     "command": "workbench.action.gotoSymbol",
