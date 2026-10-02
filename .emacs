@@ -1,272 +1,252 @@
-;; -*- lisp -*-
+;;; .emacs --- Personal Emacs configuration -*- lexical-binding: t -*-
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(column-number-mode t)
- '(custom-safe-themes
-   '("5e08fb7b2567442909bb538146110264afc0d8351539abd6640d2441ec812250" default))
- '(menu-bar-mode t)
- '(package-selected-packages
-   '(lsp-ivy company php-mode magit-delta org markdown-preview-mode rjsx-mode json-mode py-autopep8 company-jedi elpy org-babel-eval-in-repl ob-sh pug-mode markdown-mode diff-hl deft rainbow-mode rainbow-delimiters yasnippet smex counsel-projectile magit exec-path-from-shell projectile ace-window labburn-theme which-key lsp-ui yasnippet lsp-mode erlang))
- '(safe-local-variable-values '((allout-layout . t)))
- '(scroll-bar-mode nil)
- '(show-paren-mode t)
- '(tool-bar-mode nil)
- '(whitespace-style
-   '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark)))
+;;; Commentary:
+;; Built for Emacs 30+. Uses the built-in tools where they are good enough:
+;; use-package, eglot (LSP), tree-sitter modes, project.el and which-key.
+;; The minibuffer stack is Vertico + Orderless + Marginalia + Consult + Embark.
+;; Elixir uses Dexter as language server.
+;; Keybindings are the standard Emacs ones. Packages take over standard keys
+;; (C-x b, M-y, M-g g ...) instead of adding new ones.
 
-;; Use packages
+;;; Code:
+
+;;;; Packages
+
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(when (< emacs-major-version 27)
-  (package-initialize))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
 
-;; If there are no archived package contents, refresh them
-(when (not package-archive-contents)
-  (package-refresh-contents))
+(require 'use-package)
+(setq use-package-always-ensure t)
 
-;; Install a package only if it's not already installed
-(defun package-require (pkg &optional require-name)
-  "Install a package only if it's not already installed."
-  (when (not (package-installed-p pkg))
-    (package-install pkg))
-  (if require-name
-      (require require-name)
-    (require pkg)))
+;; Keep Custom from writing into this file.
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file 'noerror)
 
-(setq pop-up-windows nil)
+;;;; Basics
 
-;;; OSX
-;;; I prefer cmd key for meta
-(setq mac-option-key-is-meta nil
-      mac-command-key-is-meta t
-      mac-command-modifier 'meta
+(setq user-full-name "Andreas Hasselberg"
+      user-mail-address "andreas.hasselberg@gmail.com")
+
+;; Command is Meta, Option types special characters.
+(setq mac-command-modifier 'meta
       mac-option-modifier 'none)
 
-;; Name and E-mail
-(setq user-full-name "Andreas Hasselberg")
-(setq user-mail-address "andreas.hasselberg@gmail.com")
+(setq inhibit-startup-screen t
+      ring-bell-function 'ignore
+      use-short-answers t
+      scroll-conservatively 101
+      split-height-threshold nil)
 
-(setq ring-bell-function 'ignore)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(column-number-mode 1)
+(show-paren-mode 1)
+(electric-pair-mode 1)
+(delete-selection-mode 1)
+(global-auto-revert-mode 1)
+(savehist-mode 1)
+(recentf-mode 1)
+(save-place-mode 1)
 
-;; y/n before kill emacs
-(defun death (&optional none)
-  (interactive "P")
-  (let ((foo (read-from-minibuffer "DEATH: y/n:")))
-    (if (equal foo "y")
-        (save-buffers-kill-emacs))))
+(setq-default indent-tabs-mode nil
+              fill-column 100)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-(global-set-key "\C-x\C-c" 'death)
+;; No backup, lock or auto-save files next to the source.
+(setq make-backup-files nil
+      auto-save-default nil
+      create-lockfiles nil)
 
-;; Magit
-(package-require 'magit)
+;; Ask before quitting.
+(setq confirm-kill-emacs #'y-or-n-p)
 
-;;(global-diff-hl-mode)
+;; Load PATH from the login shell, so that mise tools (elixir, dexter, elp)
+;; are found when Emacs starts from the Dock.
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :config (exec-path-from-shell-initialize))
 
-;; Editing
-(setq-default mouse-yank-at-point t)
-(put 'overwrite-mode 'disabled t)
-(show-paren-mode t)
-(column-number-mode t)
-(line-number-mode t)
-(setq-default indent-tabs-mode nil)
-(setq whitespace-line-column 100)
-(global-whitespace-mode t)
-(setq scroll-conservatively 1)
+;;;; Look
 
+(use-package gruvbox-theme
+  :config (load-theme 'gruvbox-dark-medium t))
 
-;; disable backups
-(setq create-lockfiles nil)
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-(setq auto-save-default nil)
-(setq make-backup-files nil)
-(setq backup-inhibited t)
+(set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 130)
 
-;;; Themes
-(package-require 'labburn-theme)
-(load-theme 'labburn t)
-(set-face-attribute 'whitespace-space nil
-                    :background nil
-                    :foreground "gray40")
-(set-face-attribute 'fringe nil :background "gray30" :foreground nil)
+(use-package which-key
+  :ensure nil
+  :config (which-key-mode 1))
 
+;;;; Windows
 
-(package-require 'rainbow-mode)
+(use-package ace-window
+  :bind (("M-ö" . ace-window)
+         ("C-x o" . ace-window))
+  :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+                aw-scope 'frame))
 
-;; Ace window (and other window stuff
-(package-require 'ace-window)
-(global-set-key (kbd "M-ö") 'ace-window)
-(global-set-key (kbd "C-x 0") 'ace-delete-window)
+;;;; Minibuffer completion
 
-(setq aw-keys '(?j ?k ?l ?ö))
-(setq aw-scope 'frame)
+;; Vertical candidate list in the minibuffer.
+(use-package vertico
+  :init (vertico-mode 1)
+  :config (setq vertico-cycle t))
 
-(defun prev-window ()
-   (interactive)
-   (other-window -1))
-
-(define-key global-map (kbd "C-x p") 'prev-window)
-
-;; WHICH KEY
-(package-require 'which-key)
-(which-key-mode)
-(which-key-setup-minibuffer)
-
-;; PROJECTILE
-(package-require 'projectile)
-(package-require 'counsel-projectile)
-(projectile-mode)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(setq projectile-enable-caching t)
-(setq projectile-completion-system 'ivy)
-(setq projectile-sort-order 'recently-active)
-
-(projectile-register-project-type 'kred '(".klarna-system-metadata.json")
-                  :compile "make -sj"
-                  :test "make myday -sj"
-                  :run "bin/kred -shell"
-                  :src-dir "src/"
-                  :test-dir "test/"
-                  :test-suffix "_tests")
-
-(projectile-register-project-type 'pipfile '("Pipfile")
-                  :compile "pipenv lint"
-                  :test "pipenv run pytest"
-                  :run "pipenv shell"
-                  :test-prefix "test_")
-
-(global-set-key (kbd "C-ö i") 'counsel-semantic-or-imenu)
-(global-set-key (kbd "C-ö t") 'projectile-find-implementation-or-test-other-window)
-(global-set-key (kbd "C-ö s") 'swiper-isearch-thing-at-point)
-(global-set-key (kbd "C-ö d") 'deft)
-
-(global-set-key (kbd "C-s") 'isearch-forward)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-c j") 'counsel-projectile-git-grep)
-(define-key isearch-mode-map (kbd "C-s") 'swiper-from-isearch)
-;; C-c g - find file in git repo
-
-;; ORG
-(package-require 'org)
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-agenda-files (list "~/work/notes/todo_work.org"
-                             "~/work/notes/todo_priv.org"))
-(setq org-agenda-window-setup 'current-window)
-(setq org-log-done t)
-
-;; DEFT
-(package-require 'deft)
-(setq deft-extensions '("org" "txt" "tex"))
-(setq deft-default-extension "org")
-(setq deft-directory "~/work/notes")
-(setq deft-recursive t)
-(setq deft-use-filename-as-title t)
-(setq deft-text-mode 'org-mode)
-(setq deft-use-filter-string-for-filename t)
-
-(setq deft-file-naming-rules
-      '((noslash . "-")
-        (nospace . "-")
-        (case-fn . downcase)))
-
-;; LSP
-;; Include the Language Server Protocol Clients
-(package-require 'lsp-mode)
-;; completions
-(package-require 'company)
-(package-require 'lsp-ivy)
-;; Include the Yasnippet templating system
-(package-require 'yasnippet)
-(yas-global-mode t)
-;; Enable logging for lsp-mode
-(setq lsp-log-io t)
-;; Enable code completion
-(package-require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
-
-
-(setq split-width-threshold nil)
-(setq split-height-threshold nil)
-
-
-;; LSP-UI
-(package-require 'lsp-ui)
-(setq lsp-ui-sideline-enable nil)
-(setq lsp-ui-doc-enable t)
-(setq lsp-ui-doc-position 'bottom)
-
-(global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
-(global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
-
-;;(global-set-key (kbd "C-c C-n") 'flycheck-next-error)
-;;(global-set-key (kbd "C-c C-p") 'flycheck-prev-error)
-
-; C-c d otp doc
-(global-set-key (kbd "C-c D") 'lsp-ui-doc-show)
-(global-set-key (kbd "C-c w") 'lsp-find-references)
-(global-set-key (kbd "C-c W") 'lsp-ui-peek-find-references)
-
-;; ERLANG
-;; Install Erlang mode
-(package-require 'erlang)
-
-(add-to-list 'load-path "~/.emacs.d/site-packages")
-
-;; Show line and column numbers
-(add-hook 'erlang-mode-hook 'linum-mode)
-(add-hook 'erlang-mode-hook 'column-number-mode)
-(add-hook 'erlang-mode-hook 'rainbow-mode)
-
-(add-hook 'erlang-mode-hook 'lsp)
-
-;; JAVASCRIPT
-(package-require 'json-mode)
-(package-require 'rjsx-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
-
-;; PYTHON
-(package-require 'elpy)
-(elpy-enable)
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt")
-
-;; Enable autopep8
-(package-require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-
-;; ELIXIR
-;(package-require 'elixir-mode)
-;(package-require 'lsp-elixir)
-;(add-hook 'elixir-mode-hook 'lsp)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-
-(use-package lsp-mode
-
+;; Match candidates by space separated parts in any order.
+(use-package orderless
   :config
-  ;; Enable LSP automatically for Erlang files
-  (add-hook 'erlang-mode-hook #'lsp)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
-  ;; ELP, added as priority 0 (> -1) so takes priority over the built-in one
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("elp" "server"))
-                    :major-modes '(erlang-mode)
-                    :priority 0
-                    :server-id 'erlang-language-platform))
-  )
+;; Extra information next to each candidate (doc strings, file sizes ...).
+(use-package marginalia
+  :init (marginalia-mode 1))
+
+;; Search and navigation commands with live preview.
+(use-package consult
+  :bind (("C-x b"   . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("C-x p b" . consult-project-buffer)
+         ("M-y"     . consult-yank-pop)
+         ("M-g g"   . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-g i"   . consult-imenu)
+         ("M-g I"   . consult-imenu-multi)
+         ("M-g f"   . consult-flymake)
+         ("M-g o"   . consult-outline)
+         ("M-s l"   . consult-line)
+         ("M-s L"   . consult-line-multi)
+         ("M-s r"   . consult-ripgrep)
+         ("M-s g"   . consult-git-grep)
+         ("M-s f"   . consult-fd)
+         :map isearch-mode-map
+         ("M-s l"   . consult-line))
+  :config
+  ;; Use Consult to pick between several xref results (M-. and M-?).
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
+
+;; Actions on the thing at point or the current candidate. In the minibuffer,
+;; C-. E exports the candidates to a buffer (for example a grep buffer).
+(use-package embark
+  :bind (("C-." . embark-act)
+         ("C-h B" . embark-bindings))
+  :config (setq prefix-help-command #'embark-prefix-help-command))
+
+(use-package embark-consult
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+;; Edit grep results in place: export with C-. E, then C-c C-p, edit, C-c C-c.
+(use-package wgrep)
+
+;;;; In-buffer completion
+
+(use-package corfu
+  :init (global-corfu-mode 1)
+  :config (setq corfu-auto t
+                corfu-auto-delay 0.2
+                corfu-cycle t))
+
+(use-package corfu-popupinfo
+  :ensure nil
+  :after corfu
+  :config (corfu-popupinfo-mode 1))
+
+;; TAB indents first, then completes.
+(setq tab-always-indent 'complete)
+
+;;;; Git
+
+(use-package magit
+  :bind ("C-x g" . magit-status))
+
+(use-package diff-hl
+  :init (global-diff-hl-mode 1)
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
+;;;; Tree-sitter
+
+;; Grammars for the built-in *-ts-mode major modes. Missing grammars are
+;; built on first start. This needs a C compiler (Xcode Command Line Tools).
+(setq treesit-language-source-alist
+      '((elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+        (heex   "https://github.com/phoenixframework/tree-sitter-heex")))
+
+(dolist (lang (mapcar #'car treesit-language-source-alist))
+  (unless (treesit-language-available-p lang)
+    (treesit-install-language-grammar lang)))
+
+;;;; LSP (eglot)
+
+;; Eglot is the built-in LSP client. With it, the standard keys work:
+;; M-. definition, M-? references, M-, back, C-h . documentation.
+(use-package eglot
+  :ensure nil
+  :bind (:map eglot-mode-map
+              ("C-c l r" . eglot-rename)
+              ("C-c l a" . eglot-code-actions)
+              ("C-c l f" . eglot-format-buffer)
+              ("C-c l i" . eglot-find-implementation))
+  :config
+  (setq eglot-autoshutdown t
+        eglot-events-buffer-config '(:size 0 :format full))
+  (add-to-list 'eglot-server-programs
+               '((elixir-ts-mode heex-ts-mode) "dexter" "lsp"))
+  (add-to-list 'eglot-server-programs
+               '(erlang-mode "elp" "server")))
+
+;; Search all symbols in the project through the language server.
+(use-package consult-eglot
+  :after eglot
+  :config (keymap-set eglot-mode-map "C-c l s" #'consult-eglot-symbols))
+
+;; Format with the language server on save, when the server can do it.
+(defun my/eglot-format-on-save ()
+  "Format the buffer with eglot before save in this buffer."
+  (add-hook 'before-save-hook
+            (lambda ()
+              (when (eglot-server-capable :documentFormattingProvider)
+                (eglot-format-buffer)))
+            nil t))
+
+(use-package flymake
+  :ensure nil
+  :bind (:map flymake-mode-map
+              ("M-n" . flymake-goto-next-error)
+              ("M-p" . flymake-goto-prev-error)))
+
+;;;; Elixir
+
+(use-package elixir-ts-mode
+  :ensure nil
+  :mode (("\\.exs?\\'" . elixir-ts-mode)
+         ("mix\\.lock\\'" . elixir-ts-mode))
+  :hook ((elixir-ts-mode . eglot-ensure)
+         (elixir-ts-mode . my/eglot-format-on-save)))
+
+(use-package heex-ts-mode
+  :ensure nil
+  :mode "\\.heex\\'"
+  :hook ((heex-ts-mode . eglot-ensure)
+         (heex-ts-mode . my/eglot-format-on-save)))
+
+;; Run ExUnit tests: C-c , a (all), C-c , v (this file), C-c , s (test at point),
+;; C-c , r (run again).
+(use-package exunit
+  :hook (elixir-ts-mode . exunit-mode))
+
+;;;; Erlang
+
+(use-package erlang
+  :hook (erlang-mode . eglot-ensure))
+
+;;;; Other file types
+
+(use-package markdown-mode)
+(use-package yaml-mode)
+
+;;; .emacs ends here
