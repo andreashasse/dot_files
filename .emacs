@@ -95,6 +95,23 @@
   :ensure nil
   :config (which-key-mode 1))
 
+;;;; Dired
+
+;; macOS ls does not support --dired. Use GNU ls (gls, from coreutils)
+;; when it is installed, and otherwise turn the option off.
+(use-package dired
+  :ensure nil
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (if (executable-find "gls")
+      (setq insert-directory-program "gls"
+            dired-listing-switches "-alh --group-directories-first")
+    (setq dired-use-ls-dired nil
+          dired-listing-switches "-alh"))
+  ;; ( toggles the details (permissions, owner, size, date).
+  (setq dired-dwim-target t
+        dired-kill-when-opening-new-dired-buffer t))
+
 ;;;; Windows
 
 (use-package ace-window
