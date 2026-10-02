@@ -1,4 +1,23 @@
 [
+
+  {
+      "context": "Editor",
+      "bindings": {
+        "cmd-shift-c": [
+          "task::Spawn",
+          {
+            "task_name": "GitHub review comment",
+            "reevaluate_context": true
+          }
+        ]
+      }
+    },
+  {
+    "context": "ProjectSearchBar",
+    "bindings": {
+      "tab": "project_search::ToggleFocus"
+    }
+  },
   {
     "context": "Editor && vim_mode == visual",
     "bindings": {
