@@ -194,11 +194,18 @@
 
 ;;;; Selection
 
-;; Grow or shrink the selection along the syntax tree (tree-sitter when the
-;; mode has it): M-o expands one level, M-O shrinks one level.
+;; Grow or shrink the selection along the syntax tree: M-o expands one
+;; level, M-O shrinks one level. In tree-sitter modes only syntax nodes
+;; count, like Zed. Other modes also use words, lists and paragraphs.
+(defun my/expreg-treesit-only ()
+  "Make expreg step through tree-sitter nodes only, when the mode has a parser."
+  (when (and (fboundp 'treesit-parser-list) (treesit-parser-list))
+    (setq-local expreg-functions '(expreg--treesit))))
+
 (use-package expreg
   :bind (("M-o" . expreg-expand)
-         ("M-O" . expreg-contract)))
+         ("M-O" . expreg-contract))
+  :hook (prog-mode . my/expreg-treesit-only))
 
 ;;;; Git
 
