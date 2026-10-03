@@ -26,5 +26,6 @@
   "githubPullRequests.quickDiff": true,
 
   "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "security.promptForLocalFileProtocolHandling": false
 }
