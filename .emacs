@@ -147,6 +147,7 @@
          ("M-g g"   . consult-goto-line)
          ("M-g M-g" . consult-goto-line)
          ("M-g i"   . consult-imenu)
+         ("M-t"     . consult-imenu)     ; replaces transpose-words
          ("M-g I"   . consult-imenu-multi)
          ("M-g f"   . consult-flymake)
          ("M-g o"   . consult-outline)
@@ -190,6 +191,14 @@
 
 ;; TAB indents first, then completes.
 (setq tab-always-indent 'complete)
+
+;;;; Selection
+
+;; Grow or shrink the selection along the syntax tree (tree-sitter when the
+;; mode has it): M-o expands one level, M-O shrinks one level.
+(use-package expreg
+  :bind (("M-o" . expreg-expand)
+         ("M-O" . expreg-contract)))
 
 ;;;; Git
 
