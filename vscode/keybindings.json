@@ -36,15 +36,27 @@
   // M-o grows the selection one syntax level, M-O shrinks it, like expreg
   // in Emacs. They replace Open File (Cmd-O) and the default symbol list
   // key (Cmd-Shift-O), which is on M-t instead.
+  // The levels come from the tree-sitter parse tree (Code Blocks). HEEx has
+  // no tree-sitter parser on npm, so it keeps VS Code's smart select.
+  {
+    "key": "cmd+o",
+    "command": "codeBlocks.selectParent",
+    "when": "editorTextFocus && editorLangId != 'phoenix-heex'"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "codeBlocks.selectChild",
+    "when": "editorTextFocus && editorLangId != 'phoenix-heex'"
+  },
   {
     "key": "cmd+o",
     "command": "editor.action.smartSelect.expand",
-    "when": "editorTextFocus"
+    "when": "editorTextFocus && editorLangId == 'phoenix-heex'"
   },
   {
     "key": "cmd+shift+o",
     "command": "editor.action.smartSelect.shrink",
-    "when": "editorTextFocus"
+    "when": "editorTextFocus && editorLangId == 'phoenix-heex'"
   },
   // C-c C-c comments on the PR line at point, like pr-review in Emacs.
   // In the comment box, C-c C-c submits it (Cmd-Enter also works).
