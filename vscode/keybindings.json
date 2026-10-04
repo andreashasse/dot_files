@@ -36,7 +36,9 @@
   // M-o grows the selection one syntax level, M-O shrinks it, like expreg
   // in Emacs. They replace Open File (Cmd-O) and the default symbol list
   // key (Cmd-Shift-O), which is on M-t instead.
-  // The levels come from the tree-sitter parse tree (Code Blocks).
+  // The levels come from the tree-sitter parse tree (Code Blocks). M-O
+  // steps back to the previous selection, like expreg. Code Blocks' own
+  // shrink jumps to the first child node instead.
   // Languages Code Blocks ignores (codeBlocks.ignoredLanguageIds in
   // settings.json) keep VS Code's smart select. These come later, so they
   // win.
@@ -47,7 +49,7 @@
   },
   {
     "key": "cmd+shift+o",
-    "command": "codeBlocks.selectChild",
+    "command": "cursorUndo",
     "when": "editorTextFocus"
   },
   {
