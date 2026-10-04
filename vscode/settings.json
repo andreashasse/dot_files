@@ -33,5 +33,8 @@
 
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "security.promptForLocalFileProtocolHandling": false
+  "security.promptForLocalFileProtocolHandling": false,
+
+  // Show the last commit's author and message at the end of the current line.
+  "git.blame.editorDecoration.enabled": true
 }
