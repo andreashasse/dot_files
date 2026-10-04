@@ -32,5 +32,6 @@
   "codeBlocks.ignoredLanguageIds": ["plaintext", "Log", "ignore", "phoenix-heex"],
 
   "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "security.promptForLocalFileProtocolHandling": false
 }
