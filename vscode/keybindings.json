@@ -36,15 +36,29 @@
   // M-o grows the selection one syntax level, M-O shrinks it, like expreg
   // in Emacs. They replace Open File (Cmd-O) and the default symbol list
   // key (Cmd-Shift-O), which is on M-t instead.
+  // The levels come from the tree-sitter parse tree (Code Blocks).
+  // Languages Code Blocks ignores (codeBlocks.ignoredLanguageIds in
+  // settings.json) keep VS Code's smart select. These come later, so they
+  // win.
   {
     "key": "cmd+o",
-    "command": "editor.action.smartSelect.expand",
+    "command": "codeBlocks.selectParent",
     "when": "editorTextFocus"
   },
   {
     "key": "cmd+shift+o",
-    "command": "editor.action.smartSelect.shrink",
+    "command": "codeBlocks.selectChild",
     "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+o",
+    "command": "editor.action.smartSelect.expand",
+    "when": "editorTextFocus && editorLangId =~ /^(phoenix-heex|plaintext|Log|ignore)$/"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "editor.action.smartSelect.shrink",
+    "when": "editorTextFocus && editorLangId =~ /^(phoenix-heex|plaintext|Log|ignore)$/"
   },
   // C-c C-c comments on the PR line at point, like pr-review in Emacs.
   // In the comment box, C-c C-c submits it (Cmd-Enter also works).

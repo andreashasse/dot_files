@@ -2,3 +2,4 @@ remoteoss.dexter-lsp
 tuttieee.emacs-mcx
 jdinhlife.gruvbox
 github.vscode-pull-request-github
+selfint.code-blocks

@@ -25,6 +25,12 @@
   // extension. Needs a window reload after changing.
   "githubPullRequests.quickDiff": true,
 
+  // Code Blocks (tree-sitter selection on M-o) offers to fetch a language's
+  // parser with npm the first time a file in it is opened. HEEx has none.
+  // The first three are the extension's defaults. M-o falls back to smart
+  // select for these (keybindings.json).
+  "codeBlocks.ignoredLanguageIds": ["plaintext", "Log", "ignore", "phoenix-heex"],
+
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true
 }
