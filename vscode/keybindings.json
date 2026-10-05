@@ -62,6 +62,32 @@
     "command": "editor.action.smartSelect.shrink",
     "when": "editorTextFocus && editorLangId =~ /^(phoenix-heex|plaintext|Log|ignore)$/"
   },
+  // C-x p s searches the project with live preview, starting with the
+  // word at point (or the selection). Quick search only uses a selection,
+  // so select the word first when there is none.
+  {
+    "key": "ctrl+x p s",
+    "command": "workbench.action.quickTextSearch",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "ctrl+x p s",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "editor.action.addSelectionToNextFindMatch",
+        "workbench.action.quickTextSearch"
+      ]
+    },
+    "when": "editorTextFocus && !editorHasSelection"
+  },
+  // C-x p t lists the symbols in the whole project, starting with the word
+  // at point.
+  {
+    "key": "ctrl+x p t",
+    "command": "workbench.action.showAllSymbols",
+    "when": "!terminalFocus"
+  },
   // C-c C-c comments on the PR line at point, like pr-review in Emacs.
   // In the comment box, C-c C-c submits it (Cmd-Enter also works).
   {
