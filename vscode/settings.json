@@ -8,6 +8,10 @@
   "editor.fontSize": 13,
   "editor.fontLigatures": false,
   "editor.minimap.enabled": false,
+  // Guide lines between bracket pairs, coloured like the brackets. In
+  // Elixir do/end and fn/end count as pairs too (Dexter's language config).
+  "editor.guides.bracketPairs": "active",
+  "editor.guides.bracketPairsHorizontal": "active",
 
   // Emacs keys (emacs-mcx). Command is Meta, like in Emacs. Option is not,
   // so it still types special characters such as ö.
