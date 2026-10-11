@@ -37,5 +37,8 @@
 
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "security.promptForLocalFileProtocolHandling": false
+  "security.promptForLocalFileProtocolHandling": false,
+
+  // How eagerly Copilot suggests the next edit.
+  "github.copilot.nextEditSuggestions.eagerness": "medium"
 }
