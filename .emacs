@@ -1,12 +1,29 @@
 ;;; .emacs --- Personal Emacs configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; Built for Emacs 30+. Uses the built-in tools where they are good enough:
+;; Built for Emacs 30+, on macOS and on Omarchy (Arch Linux).
+;; Uses the built-in tools where they are good enough:
 ;; use-package, eglot (LSP), tree-sitter modes, project.el and which-key.
 ;; The minibuffer stack is Vertico + Orderless + Marginalia + Consult + Embark.
 ;; Elixir uses Dexter as language server.
-;; Keybindings are the standard Emacs ones. Packages take over standard keys
-;; (C-x b, M-y, M-g g ...) instead of adding new ones.
+;; Keybindings are mostly the standard Emacs ones. Packages take over standard
+;; keys (C-x b, M-y, M-g g ...), and a few C-c keys are added for daily work.
+;;
+;; Install:
+;;   macOS:   ln -s ~/src/dot_files/.emacs ~/.emacs
+;;   Omarchy: keep ~/.config/emacs/init.el (it loads Omarchy's theme and font
+;;            sync) and add at its end:
+;;              (load (expand-file-name "~/src/dot_files/.emacs"))
+;;
+;; Keys added on top of the standard ones:
+;;   C-s      search this buffer        C-c s    ripgrep the project
+;;   C-c i    outline (also M-t)        C-c j    find file in the project
+;;   C-c w    LSP symbols in project    C-c c    call hierarchy
+;;   C-c r    rename                    C-c a    code actions
+;;   C-c f    format                    C-c h    documentation
+;;   C-c I    find implementation       C-c l    copy @file:line for Claude
+;;   C-c g b  branch diff vs main       C-c g p  diff of a PR by number
+;;   C-c p r  review a PR (pr-review)   C-x g    Magit
 
 ;;; Code:
 
@@ -23,14 +40,21 @@
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file 'noerror)
 
+(defconst my/mac-p (eq system-type 'darwin))
+
+;; Omarchy's init.el loads its integration before this file. It syncs the
+;; theme and font with the desktop, so this file then leaves both alone.
+(defconst my/omarchy-p (fboundp 'omarchy-apply-theme))
+
 ;;;; Basics
 
 (setq user-full-name "Andreas Hasselberg"
       user-mail-address "andreas.hasselberg@gmail.com")
 
 ;; Command is Meta, Option types special characters.
-(setq mac-command-modifier 'meta
-      mac-option-modifier 'none)
+(when my/mac-p
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'none))
 
 (setq inhibit-startup-screen t
       ring-bell-function 'ignore
@@ -55,16 +79,23 @@
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-;; No backup, lock or auto-save files next to the source.
-(setq make-backup-files nil
-      auto-save-default nil
-      create-lockfiles nil)
+;; No backup, lock or auto-save files next to the source. Auto-saves
+;; (#file#) and backups (file~) go to ~/.local/state/emacs/ instead, so
+;; unsaved work can still be recovered after a crash (M-x recover-this-file).
+(let ((dir (expand-file-name "~/.local/state/emacs/")))
+  (make-directory (concat dir "auto-save/") t)
+  (make-directory (concat dir "backup/") t)
+  (setq auto-save-file-name-transforms `((".*" ,(concat dir "auto-save/") t))
+        auto-save-list-file-prefix (concat dir "auto-save/sessions-")
+        backup-directory-alist `(("." . ,(concat dir "backup/")))
+        create-lockfiles nil))
 
 ;; Ask before quitting.
 (setq confirm-kill-emacs #'y-or-n-p)
 
 ;; Load PATH from the login shell, so that mise tools (elixir, dexter, elp)
-;; are found when Emacs starts from the Dock.
+;; are found when Emacs starts from the Dock. On Omarchy, Emacs already
+;; starts with the mise shims on PATH.
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
@@ -73,7 +104,9 @@
 
 ;; Gruvbox Dark, like Zed. The Doom version also colors the newer
 ;; tree-sitter faces (function calls, properties, operators).
+;; On Omarchy the theme follows the desktop theme instead.
 (use-package doom-themes
+  :unless my/omarchy-p
   :config (load-theme 'doom-gruvbox t))
 
 ;; Color as much as tree-sitter can, like Zed does: also function calls,
@@ -85,11 +118,12 @@
   :hook (prog-mode . indent-bars-mode)
   :config (setq indent-bars-treesit-support t))
 
-(set-face-attribute 'default nil
-                    :family (if (find-font (font-spec :family "FiraCode Nerd Font Mono"))
-                                "FiraCode Nerd Font Mono"
-                              "Menlo")
-                    :height 130)
+(unless my/omarchy-p
+  (set-face-attribute 'default nil
+                      :family (if (find-font (font-spec :family "FiraCode Nerd Font Mono"))
+                                  "FiraCode Nerd Font Mono"
+                                "Menlo")
+                      :height 130))
 
 (use-package which-key
   :ensure nil
@@ -103,11 +137,14 @@
   :ensure nil
   :hook (dired-mode . dired-hide-details-mode)
   :config
-  (if (executable-find "gls")
-      (setq insert-directory-program "gls"
-            dired-listing-switches "-alh --group-directories-first")
-    (setq dired-use-ls-dired nil
-          dired-listing-switches "-alh"))
+  (cond ((not my/mac-p)
+         (setq dired-listing-switches "-alh --group-directories-first"))
+        ((executable-find "gls")
+         (setq insert-directory-program "gls"
+               dired-listing-switches "-alh --group-directories-first"))
+        (t
+         (setq dired-use-ls-dired nil
+               dired-listing-switches "-alh")))
   ;; ( toggles the details (permissions, owner, size, date).
   (setq dired-dwim-target t
         dired-kill-when-opening-new-dired-buffer t))
@@ -127,12 +164,15 @@
   :init (vertico-mode 1)
   :config (setq vertico-cycle t))
 
+(setq enable-recursive-minibuffers t)
+
 ;; Match candidates by space separated parts in any order.
 (use-package orderless
   :config
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles partial-completion))
+                                        (eglot (styles orderless)))))
 
 ;; Extra information next to each candidate (doc strings, file sizes ...).
 (use-package marginalia
@@ -140,7 +180,11 @@
 
 ;; Search and navigation commands with live preview.
 (use-package consult
-  :bind (("C-x b"   . consult-buffer)
+  :bind (("C-s"     . consult-line)       ; search this buffer
+         ("C-c s"   . consult-ripgrep)    ; ripgrep the project
+         ("C-c i"   . consult-imenu)      ; outline of this buffer
+         ("C-c j"   . project-find-file)  ; find file in the project
+         ("C-x b"   . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-x p b" . consult-project-buffer)
          ("M-y"     . consult-yank-pop)
@@ -158,7 +202,7 @@
          ("M-s f"   . consult-fd)
          :map isearch-mode-map
          ("M-s l"   . consult-line))
-  :config
+  :init
   ;; Use Consult to pick between several xref results (M-. and M-?).
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
@@ -182,6 +226,7 @@
   :init (global-corfu-mode 1)
   :config (setq corfu-auto t
                 corfu-auto-delay 0.2
+                corfu-auto-prefix 2
                 corfu-cycle t))
 
 (use-package corfu-popupinfo
@@ -210,7 +255,9 @@
 ;;;; Git
 
 (use-package magit
-  :bind ("C-x g" . magit-status))
+  :bind (("C-x g"   . magit-status)
+         ("C-c g b" . my/branch-diff)
+         ("C-c g p" . my/pr-diff)))
 
 ;; Git changes in the left fringe, in two kinds:
 ;; - Full marks: uncommitted changes (staged or not), updated while you type.
@@ -226,12 +273,30 @@
                                        "rev-parse" "--verify" "--quiet" ref)))
                 '("origin/main" "origin/master" "main" "master"))))
 
+;; In a Magit diff: TAB folds a file, RET opens the file at that commit
+;; (read only), C-RET opens the file in the working tree.
+(defun my/branch-diff ()
+  "Show every file and diff on this branch since it left the default branch.
+Like the \"Files changed\" tab of a PR."
+  (interactive)
+  (require 'magit)
+  (magit-diff-range (concat (my/git-default-branch) "...HEAD")))
+
+(defun my/pr-diff (number)
+  "Show the files and diffs of GitHub PR NUMBER without checking it out.
+The PR is fetched to refs/pr/NUMBER; no branch or file is changed."
+  (interactive "nPR number: ")
+  (require 'magit)
+  (let ((ref (format "refs/pr/%d" number)))
+    (magit-run-git "fetch" "origin" (format "+pull/%d/head:%s" number ref))
+    (magit-diff-range (format "%s...%s" (my/git-default-branch) ref))))
+
 (defun my/diff-hl-set-branch-reference ()
   "Compare this buffer with the commit where the branch left the default branch."
-  (when-let ((root (and buffer-file-name
+  (when-let* ((root (and buffer-file-name
                          (locate-dominating-file buffer-file-name ".git"))))
     (let* ((default-directory root)
-           (base (when-let ((branch (my/git-default-branch)))
+           (base (when-let* ((branch (my/git-default-branch)))
                    (ignore-errors
                      (car (process-lines "git" "merge-base" "HEAD" branch))))))
       (unless (equal base diff-hl-reference-revision)
@@ -254,10 +319,11 @@
   (setq diff-hl-update-async t)
   (diff-hl-flydiff-mode 1)
   ;; Darker Gruvbox colors for the branch marks, so they differ from the
-  ;; uncommitted ones.
-  (set-face-attribute 'diff-hl-reference-insert nil :background "#79740e" :foreground "#79740e")
-  (set-face-attribute 'diff-hl-reference-change nil :background "#076678" :foreground "#076678")
-  (set-face-attribute 'diff-hl-reference-delete nil :background "#9d0006" :foreground "#9d0006"))
+  ;; uncommitted ones. Omarchy themes keep diff-hl's own colors.
+  (unless my/omarchy-p
+    (set-face-attribute 'diff-hl-reference-insert nil :background "#79740e" :foreground "#79740e")
+    (set-face-attribute 'diff-hl-reference-change nil :background "#076678" :foreground "#076678")
+    (set-face-attribute 'diff-hl-reference-delete nil :background "#9d0006" :foreground "#9d0006")))
 
 ;;;; GitHub
 
@@ -281,12 +347,12 @@
 (use-package forge
   :after magit)
 
-;; Review PRs: check out the PR (gh pr checkout N), then C-c r in the
+;; Review PRs: check out the PR (gh pr checkout N), then C-c p r in the
 ;; project and paste the PR URL. In the review buffer, C-c C-c comments on
 ;; the line at point (mark a region for several lines), C-c C-g opens the
 ;; local file at that line, and C-c C-s submits the review.
 (use-package pr-review
-  :bind (("C-c r" . pr-review)
+  :bind (("C-c p r" . pr-review)
          :map pr-review-mode-map
          ("C-c C-g" . my/pr-review-visit-local-file)))
 
@@ -306,10 +372,60 @@ from, so the language server and project search work there."
          (message "This line was removed in the PR. Showing the same line number in the local file."))))
     (_ (user-error "Move point to a line in the diff"))))
 
+;;;; Claude
+
+;; C-c l copies an @file:line reference (or @file:start-end for a region)
+;; to paste into Claude Code. Paths are relative to the project root, where
+;; Claude Code usually runs. Works in Magit diffs too, where the line
+;; numbers refer to the new version of the file.
+(defun my/claude--region-lines (line-at)
+  "Return \"N\" or \"N-M\" for point or the region, using LINE-AT to get a line."
+  (if (use-region-p)
+      (let* ((beg (region-beginning))
+             ;; Don't count the line after a region that ends at column 0.
+             (end (if (and (> (region-end) beg)
+                           (save-excursion (goto-char (region-end)) (bolp)))
+                      (1- (region-end))
+                    (region-end)))
+             (start (save-excursion (goto-char beg) (funcall line-at)))
+             (stop (save-excursion (goto-char end) (funcall line-at))))
+        (if (or (null stop) (equal start stop)) (format "%s" start) (format "%s-%s" start stop)))
+    (format "%s" (funcall line-at))))
+
+(defun my/claude--magit-line ()
+  "Line number in the new version of the file for the diff line at point."
+  (let ((section (magit-current-section)))
+    (and (magit-section-match 'hunk section)
+         (magit-diff-hunk-line section nil))))
+
+(defun my/copy-claude-reference ()
+  "Copy an @file:line reference for Claude Code to the clipboard."
+  (interactive)
+  (let ((ref
+         (cond
+          (buffer-file-name
+           (let ((root (if-let* ((pr (project-current))) (project-root pr) default-directory)))
+             (format "@%s:%s " (file-relative-name buffer-file-name root)
+                     (my/claude--region-lines #'line-number-at-pos))))
+          ((and (derived-mode-p 'magit-mode) (magit-file-at-point))
+           ;; Magit paths are already relative to the repository root.
+           (let ((file (magit-file-at-point))
+                 (line (my/claude--magit-line)))
+             (if line
+                 (format "@%s:%s " file (my/claude--region-lines #'my/claude--magit-line))
+               (format "@%s " file))))
+          (t (user-error "No file here")))))
+    (kill-new ref)
+    (deactivate-mark)
+    (message "Copied %s" ref)))
+
+(keymap-global-set "C-c l" #'my/copy-claude-reference)
+
 ;;;; Tree-sitter
 
 ;; Grammars for the built-in *-ts-mode major modes. Missing grammars are
-;; built on first start. This needs a C compiler (Xcode Command Line Tools).
+;; built on first start. This needs git and a C compiler (on macOS the
+;; Xcode Command Line Tools).
 (setq treesit-language-source-alist
       '((elixir "https://github.com/elixir-lang/tree-sitter-elixir")
         (heex   "https://github.com/phoenixframework/tree-sitter-heex")))
@@ -325,10 +441,12 @@ from, so the language server and project search work there."
 (use-package eglot
   :ensure nil
   :bind (:map eglot-mode-map
-              ("C-c l r" . eglot-rename)
-              ("C-c l a" . eglot-code-actions)
-              ("C-c l f" . eglot-format-buffer)
-              ("C-c l i" . eglot-find-implementation))
+              ("C-c r" . eglot-rename)
+              ("C-c a" . eglot-code-actions)
+              ("C-c f" . eglot-format-buffer)
+              ("C-c h" . eldoc-doc-buffer)
+              ("C-c c" . eglot-show-call-hierarchy)
+              ("C-c I" . eglot-find-implementation))
   :config
   (setq eglot-autoshutdown t
         eglot-events-buffer-config '(:size 0 :format full))
@@ -340,7 +458,7 @@ from, so the language server and project search work there."
 ;; Search all symbols in the project through the language server.
 (use-package consult-eglot
   :after eglot
-  :config (keymap-set eglot-mode-map "C-c l s" #'consult-eglot-symbols))
+  :config (keymap-set eglot-mode-map "C-c w" #'consult-eglot-symbols))
 
 ;; Format with the language server on save, when the server can do it.
 (defun my/eglot-format-on-save ()
