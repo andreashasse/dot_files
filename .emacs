@@ -16,7 +16,7 @@
 ;;              (load (expand-file-name "~/src/dot_files/.emacs"))
 ;;
 ;; Keys added on top of the standard ones:
-;;   C-s      search this buffer        C-c s    ripgrep the project
+;;   M-s l    search buffer (list)      C-c s    ripgrep the project
 ;;   C-c i    outline (also M-t)        C-c j    find file in the project
 ;;   C-c w    LSP symbols in project    C-c c    call hierarchy
 ;;   C-c r    rename                    C-c a    code actions
@@ -180,8 +180,7 @@
 
 ;; Search and navigation commands with live preview.
 (use-package consult
-  :bind (("C-s"     . consult-line)       ; search this buffer
-         ("C-c s"   . consult-ripgrep)    ; ripgrep the project
+  :bind (("C-c s"   . consult-ripgrep)    ; ripgrep the project
          ("C-c i"   . consult-imenu)      ; outline of this buffer
          ("C-c j"   . project-find-file)  ; find file in the project
          ("C-x b"   . consult-buffer)
