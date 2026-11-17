@@ -16,7 +16,7 @@
 ;;              (load (expand-file-name "~/src/dot_files/.emacs"))
 ;;
 ;; Keys added on top of the standard ones:
-;;   M-s l    search buffer (list)      C-c s    ripgrep the project
+;;   C-s/C-r  search this buffer        C-c s    ripgrep the project
 ;;   C-c i    outline (also M-t)        C-c j    find file in the project
 ;;   C-c w    LSP symbols in project    C-c c    call hierarchy
 ;;   C-c r    rename                    C-c a    code actions
@@ -178,9 +178,51 @@
 (use-package marginalia
   :init (marginalia-mode 1))
 
+;; C-s / C-r open consult-line: every match in a list, with live preview.
+;; Inside it the isearch habits work:
+;;   C-s, C-r  next / previous match
+;;   C-s       on an empty search: the previous search again (C-s C-s)
+;;   C-w       on an empty search: the symbol at point
+(defun my/consult-line-next ()
+  "Previous search when the input is empty, otherwise the next match."
+  (interactive)
+  (if (string-empty-p (minibuffer-contents))
+      (previous-history-element 1)
+    (vertico-next)))
+
+(defun my/consult-line-previous ()
+  "Previous search when the input is empty, otherwise the previous match."
+  (interactive)
+  (if (string-empty-p (minibuffer-contents))
+      (previous-history-element 1)
+    (vertico-previous)))
+
+(defvar my/consult-line--symbol nil
+  "Symbol at point when consult-line started.")
+
+(define-advice consult-line (:before (&rest _) remember-symbol)
+  (setq my/consult-line--symbol (thing-at-point 'symbol t)))
+
+(defun my/consult-line-yank-symbol ()
+  "Insert the symbol at point in the searched buffer, on an empty search."
+  (interactive)
+  (if (string-empty-p (minibuffer-contents))
+      (insert (or my/consult-line--symbol ""))
+    (when (use-region-p) (kill-region (region-beginning) (region-end)))))
+
+(defvar my/consult-line-map
+  (let ((map (make-sparse-keymap)))
+    (keymap-set map "C-s" #'my/consult-line-next)
+    (keymap-set map "C-r" #'my/consult-line-previous)
+    (keymap-set map "C-w" #'my/consult-line-yank-symbol)
+    map)
+  "Extra keys in the consult-line minibuffer.")
+
 ;; Search and navigation commands with live preview.
 (use-package consult
-  :bind (("C-c s"   . consult-ripgrep)    ; ripgrep the project
+  :bind (("C-s"     . consult-line)       ; isearch-like, see below
+         ("C-r"     . consult-line)
+         ("C-c s"   . consult-ripgrep)    ; ripgrep the project
          ("C-c i"   . consult-imenu)      ; outline of this buffer
          ("C-c j"   . project-find-file)  ; find file in the project
          ("C-x b"   . consult-buffer)
@@ -201,6 +243,8 @@
          ("M-s f"   . consult-fd)
          :map isearch-mode-map
          ("M-s l"   . consult-line))
+  :config
+  (consult-customize consult-line :keymap my/consult-line-map)
   :init
   ;; Use Consult to pick between several xref results (M-. and M-?).
   (setq xref-show-xrefs-function #'consult-xref
