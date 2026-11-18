@@ -183,6 +183,17 @@
 ;;   C-s, C-r  next / previous match
 ;;   C-s       on an empty search: the previous search again (C-s C-s)
 ;;   C-w       on an empty search: the symbol at point
+(defun my/consult-line-region-or-normal ()
+  "Run `consult-line', pre-filled with the active region if there is one."
+  (interactive)
+  (if (use-region-p)
+      (let ((text (buffer-substring-no-properties (region-beginning) (region-end))))
+        (deactivate-mark)
+        (consult-line text))
+    (consult-line)))
+
+(global-set-key (kbd "C-s") #'my/consult-line-region-or-normal)
+
 (defun my/consult-line-next ()
   "Previous search when the input is empty, otherwise the next match."
   (interactive)
