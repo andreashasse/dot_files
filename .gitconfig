@@ -47,7 +47,7 @@
   default = simple
 
 [core]
-  editor = vim
+  editor = emacsclient -t -a ''
 
 [github]
   user = andreashasse

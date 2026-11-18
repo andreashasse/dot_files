@@ -99,10 +99,10 @@ if (( $+commands[bat] )); then
 fi
 
 # --- editor ---------------------------------------------------------------
-# --wait gör att verktyg som väntar in redigeringen fungerar, i stället för
-# att fortsätta direkt när Zed-fönstret öppnats. Git använder vim, satt i
-# ~/.gitconfig, och påverkas inte av detta.
-export EDITOR='zed --wait'
+# emacsclient -t öppnar filen i terminalen mot den Emacs-server som redan
+# kör, så det går snabbt. -a '' startar en server om ingen kör. Git sätter
+# samma editor i ~/.gitconfig.
+export EDITOR="emacsclient -t -a ''"
 export VISUAL="$EDITOR"
 
 # --- autosuggestions och syntaxfärgning -----------------------------------
